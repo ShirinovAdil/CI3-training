@@ -3,37 +3,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Users extends CI_Controller {
 
+
     public function index()
     {
-        echo "index";
-    }
-
-    public function hi()
-    {
-        echo "hi";
+        $this->load->model('User_model');
+        $this->load->helper('url');
     }
 
     public function all()
     {
-        $this->load->model('User_model');
-
+        $this->load->model("User_model"); // load model
         $query = $this->User_model->get_last_ten_entries();
 
         foreach ($query as $row)
         {
-            echo $row->id;
-            echo $row->username;
-            echo $row->password;
+            echo $row->id .'. ' . $row->username .' password: ' . $row->password;
+            echo "<br/>";
         }
     }
 
 
     public function login(){
-        $this->load->helper('url');
-
         $this->load->view('layout/header');
         $this->load->view('auth/login');
-
     }
 
 
@@ -43,15 +35,20 @@ class Users extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required');
 
         if($this->form_validation->run()) {
-            $username = $this->input->post('username');
+
+            $this->load->model("User_model"); // load model
+
+            $username = $this->input->post('username');  // get post request input data
             $password = $this->input->post('password');
 
-            $array = array('username' => $username, 'password' => $password);
-            echo $this->db->where($array);
-
-
+            $user = $this->User_model->fetch_user($username, $password);
+            if($user){
+               echo "Success login";
+            }else{
+                echo "Login failed";
+            }
         }else{
-            $this->login();
+            $this->login(); //render login form
         }
 
     }

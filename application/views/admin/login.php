@@ -6,10 +6,17 @@
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">Sign in to start your session</p>
 
+            <?php
+            if(isset($message)){
+                ?>
+                <small class="text-danger text-center"><?php echo $message; ?></small>
+                <?php
+            }
+            ?>
 
-            <form method="post" action="<?php echo base_url(); ?>users/login_validation">
+            <p class="login-box-msg">Admin login</p>
+            <form method="post" action="<?php echo base_url(); ?>admin/login_validation">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="username" placeholder="Username" value="<?php echo set_value('username'); ?>">
                     <div class="input-group-append">

@@ -12,4 +12,24 @@ class User_model extends CI_Model {
         return $query->result();
     }
 
+    public function insert_user($data){
+        $this->db->insert("tb_users", $data);
+    }
+
+    public function fetch_user($username, $password){
+        $array = array('username' => $username, 'password' => $password);
+
+        $this->db->select('*');
+        $this->db->from('tb_users');
+        $this->db->where($array);
+        $result=$this->db->get();
+        if ($result->num_rows()) {
+            return $result->row();
+        } else {
+            return false;
+        }
+
+
+    }
+
 }
