@@ -28,8 +28,12 @@ class User_model extends CI_Model {
         } else {
             return false;
         }
+    }
 
-
+    public function get_all_users(){
+        // Model method to return all users
+        $query = $this->db->get('tb_users');
+        return $query->result();
     }
 
 }

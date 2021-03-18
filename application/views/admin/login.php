@@ -16,7 +16,7 @@
             ?>
 
             <p class="login-box-msg">Admin login</p>
-            <form method="post" action="<?php echo base_url(); ?>admin/login_validation">
+            <?=form_open(base_url('admin/login_validation'),['method'=>'post'])?>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="username" placeholder="Username" value="<?php echo set_value('username'); ?>">
                     <div class="input-group-append">

@@ -3,25 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Users extends CI_Controller {
 
-
-    public function index()
+    public function __construct()
     {
-        $this->load->model('User_model');
-        $this->load->helper('url');
-    }
-
-    public function all()
-    {
+        parent::__construct();
+        $this->load->library('form_validation');
         $this->load->model("User_model"); // load model
-        $query = $this->User_model->get_last_ten_entries();
-
-        foreach ($query as $row)
-        {
-            echo $row->id .'. ' . $row->username .' password: ' . $row->password;
-            echo "<br/>";
-        }
     }
 
+    public function index($message=NULL)
+    {
+        $data = array('message' => $message);
+        $this->load->view('layout/header');
+        $this->load->view('auth/login', $data);
+    }
 
     public function login(){
         $this->load->view('layout/header');
@@ -54,6 +48,16 @@ class Users extends CI_Controller {
     }
 
 
+    public function all()
+    {
+        $query = $this->User_model->get_last_ten_entries();
+
+        foreach ($query as $row)
+        {
+            echo $row->id .'. ' . $row->username .' password: ' . $row->password;
+            echo "<br/>";
+        }
+    }
 
 
 
