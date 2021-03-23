@@ -36,4 +36,23 @@ class User_model extends CI_Model {
         return $query->result();
     }
 
+
+    public function delete_user_by_id($user_id){
+        $this->db->select('*');
+        $this->db->from('tb_users');
+        $this->db->where('id', $user_id);
+        $result=$this->db->get();
+        if ($result->num_rows()) {
+             $fetched_user = $result->row();
+            if($fetched_user -> role != "root"){
+                $this->db->delete('tb_users', array('id' => $user_id));
+                return true;
+            }else{
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -16,10 +16,10 @@ class Admin extends CI_Controller {
     {
         if(!$this->is_authenticated()){
             $data = array('message' => $message);
-            $this->load->view('layout/header');
+            $this->load->view('layout/head');
             $this->load->view('admin/login', $data);
         }else{
-            echo "You logged in already";
+            redirect(base_url() . 'admin/dashboard');
         }
 
     }
@@ -94,10 +94,12 @@ class Admin extends CI_Controller {
             $data = array(
                 "users" => $users
             );
+            $this->load->view('layout/head');
             $this->load->view('layout/header');
             $this->load->view('admin/dashboard', $data);
         }else{
-            echo "Permission not granted";
+            $this->load->view('layout/head');
+            $this->load->view('errors/permission_error');
         }
     }
 
@@ -119,6 +121,16 @@ class Admin extends CI_Controller {
         echo $userId;
         echo '<br/>';
         echo $userRole;
+    }
+
+    public function delete_user(){
+            $user_id = $this->input->post('userId');  // get post id to delete user
+            $query = $this->User_model->delete_user_by_id($user_id);
+            if($query){
+                redirect(base_url('admin/dashboard'));
+            }else{
+                echo "forbidden action";
+            }
     }
 
 
