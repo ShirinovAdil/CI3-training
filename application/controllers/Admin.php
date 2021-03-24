@@ -1,9 +1,10 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
+class Admin extends CI_Controller
+{
 
-    private $ROLES  = array("root", "moderator", "admin", "user");
+    private $ROLES = array("root", "moderator", "admin", "user");
 
     public function __construct()
     {
@@ -12,55 +13,59 @@ class Admin extends CI_Controller {
         $this->load->model("User_model"); // load model
     }
 
-    public function index($message=NULL)
+    public function index($message = NULL)
     {
-        if(!$this->is_authenticated()){
+        // path("/")
+        if (!$this->is_authenticated()) {
             $data = array('message' => $message);
             $this->load->view('layout/head');
             $this->load->view('admin/login', $data);
-        }else{
+        } else {
             redirect(base_url() . 'admin/dashboard');
         }
 
     }
 
 
-    public function check_role($role_list){
-        // check if user has needed role
+    public function check_role($role_list)
+    {
+        // :Service - Check if user has needed role
 
         $user_role = $this->session->userdata('userRole');
-        if(in_array($user_role, $role_list)){
+        if (in_array($user_role, $role_list)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function is_authenticated(){
-        // check if user is logged in
+    public function is_authenticated()
+    {
+        // :Service - Check if user is logged in
 
         $userId = $this->session->userdata('userId');
         $userRole = $this->session->userdata('userRole');
-        if($userId && $userRole){
+        if ($userId && $userRole) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function login_validation(){
-        // validation backend for login form
+    public function login_validation()
+    {
+        // :Service - Validation backend for login form
 
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required');
 
-        if($this->form_validation->run()) {
+        if ($this->form_validation->run()) {
 
             $username = $this->input->post('username');  // get post request input data
             $password = $this->input->post('password');
 
             $user = $this->User_model->fetch_user($username, $password);
-            if($user){
+            if ($user) {
                 $session_data = array(
                     'userId' => $user->id,
                     'userRole' => $user->role
@@ -68,10 +73,10 @@ class Admin extends CI_Controller {
                 $this->session->set_userdata($session_data);
                 //$this->dashboard(array("user"));
                 redirect(base_url() . 'admin/dashboard');
-            }else{
+            } else {
                 $this->index(); //render login form
             }
-        }else{
+        } else {
             $this->index(); //render login form
         }
 
@@ -79,7 +84,8 @@ class Admin extends CI_Controller {
 
     function logout()
     {
-        /* Controller to logout an admin user */
+        // path("admin/logout")
+        /* Logout an admin user */
 
         $userId = $this->session->userdata('userId');
         $userRole = $this->session->userdata('userRole');
@@ -88,8 +94,12 @@ class Admin extends CI_Controller {
         redirect(base_url() . 'admin');
     }
 
-    public function dashboard($ALLOWED_ROLES=array("root", "admin")){
-        if($this->check_role($ALLOWED_ROLES)){
+    public function dashboard($ALLOWED_ROLES = array("root", "admin"))
+    {
+        // path("admin/dashboard")
+        /* Render admin dashboard  */
+
+        if ($this->check_role($ALLOWED_ROLES)) {
             $users = $this->User_model->get_all_users();
             $data = array(
                 "users" => $users
@@ -97,24 +107,67 @@ class Admin extends CI_Controller {
             $this->load->view('layout/head');
             $this->load->view('layout/header');
             $this->load->view('admin/dashboard', $data);
+        } else {
+            $this->load->view('layout/head');
+            $this->load->view('errors/permission_error');
+        }
+    }
+
+    public function delete_user($ALLOWED_ROLES = array("root", "admin", "moderator"))
+    {
+        // path("admin/delete_user")
+        /* Delete user */
+        if ($this->check_role($ALLOWED_ROLES)) {
+
+            $user_id = $this->input->post('userId');  // get post id to delete user
+            $query = $this->User_model->delete_user_by_id($user_id);
+            if ($query) {
+                redirect(base_url('admin/dashboard'));
+            } else {
+                echo "forbidden action";
+            }
         }else{
             $this->load->view('layout/head');
             $this->load->view('errors/permission_error');
         }
     }
 
+    public function edit_user($user_id)
+    {
+        // VALIDATION ?
+        $user = $this->User_model->get_user_by_id($user_id);
+        $data = array();
+        $data['user'] = $user;
+
+        $this->form_validation->set_rules('username', 'Username', 'required');
+        if($this->form_validation->run() == false){
+            $this->load->view('layout/head');
+            $this->load->view('layout/header');
+            $this->load->view('admin/edit_user', $data);
+        }else{
+            $form_array = array();
+            $form_array['username'] = $this->input->post('username');
+            $this->User_model->update_user_by_id($user_id, $form_array);
+            redirect(base_url('admin/dashboard'));
+        }
+    }
+
+
     public function all()
     {
+        // :Service - Return last 10 users
+
         $query = $this->User_model->get_last_ten_entries();
 
-        foreach ($query as $row)
-        {
-            echo $row->id .'. ' . $row->username .' password: ' . $row->password;
+        foreach ($query as $row) {
+            echo $row->id . '. ' . $row->username . ' password: ' . $row->password;
             echo "<br/>";
         }
     }
 
-    public function sessions(){
+    public function sessions()
+    {
+        // :Service - Echo session vars
 
         $userId = $this->session->userdata('userId');
         $userRole = $this->session->userdata('userRole');
@@ -122,17 +175,6 @@ class Admin extends CI_Controller {
         echo '<br/>';
         echo $userRole;
     }
-
-    public function delete_user(){
-            $user_id = $this->input->post('userId');  // get post id to delete user
-            $query = $this->User_model->delete_user_by_id($user_id);
-            if($query){
-                redirect(base_url('admin/dashboard'));
-            }else{
-                echo "forbidden action";
-            }
-    }
-
 
 
 }

@@ -42,18 +42,20 @@
                                 <td> <?php echo $user->id; ?></td>
                                 <td> <?php echo $user->username; ?></td>
                                 <td> <?php echo $user->role; ?></td>
-                                <td>
-                                    <button type="button" class="btn btn-primary"><i class="far fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-success"><i class="fas fa-edit"></i>
+                                <td style="display: flex;">
+                                    <button type="button" class="btn btn-primary mr-1"><i class="far fa-eye"></i>
                                     </button>
 
+                                    <a href="<?php echo base_url('admin/edit_user/'); echo '' . $user->id; ?>">
+                                        <button type="button" class="btn btn-success mr-1"><i class="fas fa-edit"></i></button>
+                                    </a>
+
                                     <?php if ($user->role != "root") { ?>
-                                        <?= form_open(base_url('admin/delete_user'), ['method' => 'post']) ?>
+                                        <?= form_open(base_url('admin/delete_user'), ['method' => 'post', 'display'=> 'inline-block', 'width' => '44px;']) ?>
                                         <input type="hidden" name="userId"
                                                value="<?= set_value('userId', $user->id); ?>">
 
-                                        <button type="submit" class="btn btn-danger"><i
+                                        <button type="submit" class="btn btn-danger mr-1"><i
                                                     class="far fa-trash-alt"></i>
                                         </button>
                                         <?= form_close() ?>

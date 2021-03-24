@@ -17,6 +17,7 @@ class User_model extends CI_Model {
     }
 
     public function fetch_user($username, $password){
+        // by username and pwd
         $array = array('username' => $username, 'password' => $password);
 
         $this->db->select('*');
@@ -34,6 +35,16 @@ class User_model extends CI_Model {
         // Model method to return all users
         $query = $this->db->get('tb_users');
         return $query->result();
+    }
+
+    public function get_user_by_id($user_id){
+        $this->db->where('id', $user_id);
+        return $this->db->get('tb_users')->row_array();
+    }
+
+    public function update_user_by_id($user_id, $form_array){
+        $this->db->where('id', $user_id);
+        $this->db->update('tb_users', $form_array);
     }
 
 
