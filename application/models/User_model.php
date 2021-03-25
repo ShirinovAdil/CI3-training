@@ -66,4 +66,19 @@ class User_model extends CI_Model {
         }
     }
 
+    function role_enums($table , $field){
+        // returns role enum
+
+        $query = "SHOW COLUMNS FROM ".$table." LIKE '$field'";
+        $row = $this->db->query("SHOW COLUMNS FROM ".$table." LIKE '$field'")->row()->Type;
+        $regex = "/'(.*?)'/";
+        preg_match_all( $regex , $row, $enum_array );
+        $enum_fields = $enum_array[1];
+        foreach ($enum_fields as $key=>$value)
+        {
+            $enums[$value] = $value;
+        }
+        return $enums;
+    }
+
 }

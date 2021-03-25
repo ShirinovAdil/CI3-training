@@ -39,6 +39,7 @@ class Admin extends CI_Controller
         }
     }
 
+
     public function is_authenticated()
     {
         // :Service - Check if user is logged in
@@ -99,13 +100,17 @@ class Admin extends CI_Controller
         // path("admin/dashboard")
         /* Render admin dashboard  */
 
+        $header_data = array(
+            "is_authenticated" => $this->is_authenticated()
+        );
+
         if ($this->check_role($ALLOWED_ROLES)) {
             $users = $this->User_model->get_all_users();
             $data = array(
                 "users" => $users
             );
             $this->load->view('layout/head');
-            $this->load->view('layout/header');
+            $this->load->view('layout/header', $header_data);
             $this->load->view('admin/dashboard', $data);
         } else {
             $this->load->view('layout/head');
@@ -134,15 +139,19 @@ class Admin extends CI_Controller
 
     public function edit_user($user_id)
     {
+        $header_data = array(
+            "is_authenticated" => $this->is_authenticated()
+        );
         // VALIDATION ?
         $user = $this->User_model->get_user_by_id($user_id);
         $data = array();
         $data['user'] = $user;
+        $data['all_roles'] = $this->User_model->role_enums('tb_users', 'role');
 
         $this->form_validation->set_rules('username', 'Username', 'required');
         if($this->form_validation->run() == false){
             $this->load->view('layout/head');
-            $this->load->view('layout/header');
+            $this->load->view('layout/header', $header_data);
             $this->load->view('admin/edit_user', $data);
         }else{
             $form_array = array();
