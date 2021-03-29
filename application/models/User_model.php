@@ -49,6 +49,7 @@ class User_model extends CI_Model {
 
 
     public function delete_user_by_id($user_id){
+        // delete user by ID but not root user
         $this->db->select('*');
         $this->db->from('tb_users');
         $this->db->where('id', $user_id);

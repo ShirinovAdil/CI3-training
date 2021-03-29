@@ -23,6 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+//date_default_timezone_set('Asia/Baku');
+
 $config['base_url'] = 'http://localhost/CI3-training/';
 
 /*

@@ -9,23 +9,21 @@ class Admin extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('form_validation');
         $this->load->model("User_model"); // load model
     }
 
     public function index($message = NULL)
     {
-        // path("/")
-        if (!$this->is_authenticated()) {
-            $data = array('message' => $message);
-            $this->load->view('layout/head');
-            $this->load->view('admin/login', $data);
-        } else {
-            redirect(base_url() . 'admin/dashboard');
-        }
-
+        redirect(base_url('admin/login'));
     }
 
+    public function login(){
+        if (!$this->is_authenticated()) {
+            $this->load->view('admin/login');
+        }else{
+            redirect(base_url('admin/dashboard'));
+        }
+    }
 
     public function check_role($role_list)
     {
@@ -72,13 +70,16 @@ class Admin extends CI_Controller
                     'userRole' => $user->role
                 );
                 $this->session->set_userdata($session_data);
-                //$this->dashboard(array("user"));
                 redirect(base_url() . 'admin/dashboard');
             } else {
-                $this->index(); //render login form
+                //$this->session->set_flashdata('success', 'Success Message...');
+                //$this->session->set_flashdata('warning', 'Warning Message...');
+                //$this->session->set_flashdata('info', 'Info Message...');
+                $this->session->set_flashdata('error', 'Wrong credentials were provided');
+                redirect(base_url('admin/login'));
             }
         } else {
-            $this->index(); //render login form
+            redirect(base_url('admin/login'));
         }
 
     }
@@ -92,7 +93,7 @@ class Admin extends CI_Controller
         $userRole = $this->session->userdata('userRole');
         $this->session->unset_userdata('userId');
         $this->session->unset_userdata('userRole');
-        redirect(base_url() . 'admin');
+        redirect(base_url('admin/login'));
     }
 
     public function dashboard($ALLOWED_ROLES = array("root", "admin"))
@@ -113,8 +114,7 @@ class Admin extends CI_Controller
             $this->load->view('layout/header', $header_data);
             $this->load->view('admin/dashboard', $data);
         } else {
-            $this->load->view('layout/head');
-            $this->load->view('errors/permission_error');
+            redirect(base_url('admin/access_denied'));
         }
     }
 
@@ -127,6 +127,10 @@ class Admin extends CI_Controller
             $user_id = $this->input->post('userId');  // get post id to delete user
             $query = $this->User_model->delete_user_by_id($user_id);
             if ($query) {
+                //$this->session->set_flashdata('success', 'Success Message...');
+                //$this->session->set_flashdata('warning', 'Warning Message...');
+                $this->session->set_flashdata('info', 'Record was deleted');
+                //$this->session->set_flashdata('error', 'Wrong credentials were provided');
                 redirect(base_url('admin/dashboard'));
             } else {
                 echo "forbidden action";
@@ -161,6 +165,11 @@ class Admin extends CI_Controller
         }
     }
 
+    public function access_denied(){
+        $this->load->view('layout/head');
+        $this->load->view('errors/permission_error');
+    }
+
 
     public function all()
     {
@@ -177,12 +186,7 @@ class Admin extends CI_Controller
     public function sessions()
     {
         // :Service - Echo session vars
-
-        $userId = $this->session->userdata('userId');
-        $userRole = $this->session->userdata('userRole');
-        echo $userId;
-        echo '<br/>';
-        echo $userRole;
+       echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
     }
 
 
