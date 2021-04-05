@@ -110,9 +110,8 @@ class Admin extends CI_Controller
             $data = array(
                 "users" => $users
             );
-            $this->load->view('layout/head');
-            $this->load->view('layout/header', $header_data);
-            $this->load->view('admin/dashboard', $data);
+
+            $this->load->view('admin/dashboard/home', $data);
         } else {
             redirect(base_url('admin/access_denied'));
         }
@@ -193,6 +192,13 @@ class Admin extends CI_Controller
 
     public function add_training(){
 
+    }
+
+
+    public function trainings()
+    {
+        $data['trainings'] = $this->Admin_model->get_all_trainings();
+        $this->load->view('admin/dashboard/home', $data);
     }
 
 
