@@ -10,6 +10,7 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         $this->load->model("User_model"); // load model
+        $this->load->model("Admin_model"); // load model
     }
 
     public function index($message = NULL)
@@ -198,7 +199,7 @@ class Admin extends CI_Controller
     public function trainings()
     {
         $data['trainings'] = $this->Admin_model->get_all_trainings();
-        $this->load->view('admin/dashboard/home', $data);
+        $this->load->view('admin/trainings/home', $data);
     }
 
 
