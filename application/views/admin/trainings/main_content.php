@@ -60,12 +60,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Title AZ</th>
-                                <th>Title EN</th>
-                                <th>Description EN</th>
                                 <th>Description AZ</th>
                                 <th>Contact</th>
-                                <th>Partners name</th>
-                                <th>Partners website</th>
+                                <th>Partners</th>
                             </tr>
                             </thead>
 
@@ -75,12 +72,11 @@
                                 <tr>
                                     <td> <?php echo $training['t_id']; ?></td>
                                     <td> <?php echo $training['t_title_az']; ?></td>
-                                    <td> <?php echo $training['t_title_en']; ?></td>
                                     <td> <?php echo $training['t_description_az']; ?></td>
-                                    <td> <?php echo $training['t_description_en']; ?></td>
                                     <td> <?php echo $training['t_contact']; ?></td>
-                                    <td> <?php echo $training['partners_name']; ?></td>
-                                    <td> <?php echo $training['partners_website']; ?></td>
+                                    <td>
+                                        <a href="<?= base_url('admin/trainings_partners_list/' . $training['t_id']) ?>"><?php echo $training['partners_count']; ?></a>
+                                    </td>
                                 </tr>
 
                             <?php endforeach; ?>

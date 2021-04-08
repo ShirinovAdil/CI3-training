@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Admin extends CI_Controller
+class   Admin extends CI_Controller
 {
 
     private $ROLES = array("root", "moderator", "admin", "user");
@@ -200,6 +200,24 @@ class Admin extends CI_Controller
     {
         $data['trainings'] = $this->Admin_model->get_all_trainings();
         $this->load->view('admin/trainings/home', $data);
+    }
+
+    public function trainings_partners_list($training_id){
+        $data['partners'] = $this->Admin_model->get_partners_of_training($training_id);
+        $data['training'] = $this->Admin_model->get_training_by_id($training_id);
+        $this->load->view('admin/trainings/partners/home', $data);
+    }
+
+    public function delete_partner_by_id_from_training(){
+        $partner_id = $this->input->post('partnerId');
+        $training_id = $this->input->post('trainingId');
+        $query = $this->Admin_model->delete_partner_by_id_from_training($partner_id);
+        if ($query) {
+            redirect(base_url('admin/trainings_partners_list/' . $training_id));
+        } else {
+            echo "forbidden action";
+        }
+
     }
 
 
