@@ -136,8 +136,7 @@ class   Admin extends CI_Controller
                 echo "forbidden action";
             }
         }else{
-            $this->load->view('layout/head');
-            $this->load->view('errors/permission_error');
+            $this->load->view('errors/permission/home');
         }
     }
 
@@ -167,7 +166,7 @@ class   Admin extends CI_Controller
 
     public function access_denied(){
         $this->load->view('layout/head');
-        $this->load->view('errors/permission_error');
+        $this->load->view('errors/permission/home');
     }
 
 
@@ -187,12 +186,6 @@ class   Admin extends CI_Controller
     {
         // :Service - Echo session vars
        echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
-    }
-
-
-
-    public function add_training(){
-
     }
 
 
