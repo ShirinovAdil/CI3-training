@@ -213,5 +213,20 @@ class   Admin extends CI_Controller
 
     }
 
+    public function add_partner_to_training(){
+        $data['partners'] = $this->Admin_model->get_all_partners();
+        $this->load->view('admin/trainings/partners/partners_add/home', $data);
+
+    }
+
+    public function add_partner_to_training_validate(){
+        $data = $this->input->post('partnerID');  // get post id to delete user
+
+        foreach($data as $partner){
+            echo $partner;
+        }
+    }
+
+
 
 }

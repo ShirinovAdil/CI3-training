@@ -59,6 +59,14 @@ class Admin_model extends CI_Model
     }
 
 
+
+    function get_all_partners()
+    {
+        $query = $this->db->query('SELECT * FROM partners');
+        return $query->result_array();
+    }
+
+
 }
 
 

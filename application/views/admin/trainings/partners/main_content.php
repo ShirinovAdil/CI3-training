@@ -96,12 +96,11 @@
                                     </td>
 
                                 </tr>
-
-
                             <?php endforeach; ?>
                         </table>
                     </div>
                 </div>
+                <a style="float:right" href="<?= base_url('admin/add_partner_to_training')?>" type="button" class="btn btn-primary">Add partner</a>
 
             </div>
         </div>
