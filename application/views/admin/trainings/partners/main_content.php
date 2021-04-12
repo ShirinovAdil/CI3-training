@@ -83,15 +83,18 @@
                                                value="<?= set_value('trainingId', $training['t_id']); ?>">
 
 
-                                        <a href="<?php echo base_url('admin/edit_partner/');
-                                        echo '' . $partner['p_id']; ?>">
-                                            <button type="button" class="btn btn-success mr-1"><i
-                                                        class="fas fa-edit"></i></button>
-                                        </a>
 
                                         <button type="submit" class="btn btn-danger mr-1"><i
                                                     class="far fa-trash-alt"></i>
                                         </button>
+
+
+                                        <div class="custom-control custom-switch" style="display: inline;">
+                                            <input type="checkbox" class="custom-control-input" id=<?="customSwitch" .$partner['p_id']?>>
+                                            <label class="custom-control-label" for=<?="customSwitch" .$partner['p_id']?>>Status</label>
+                                        </div>
+
+
                                         <?= form_close() ?>
                                     </td>
 
@@ -100,7 +103,7 @@
                         </table>
                     </div>
                 </div>
-                <a style="float:right" href="<?= base_url('admin/add_partner_to_training')?>" type="button" class="btn btn-primary">Add partner</a>
+                <a style="float:right" href="<?= base_url('admin/add_partner_to_training/'.$training['t_id'])?>" type="button" class="btn btn-primary">Add partner</a>
 
             </div>
         </div>

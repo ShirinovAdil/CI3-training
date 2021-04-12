@@ -213,18 +213,32 @@ class   Admin extends CI_Controller
 
     }
 
-    public function add_partner_to_training(){
-        $data['partners'] = $this->Admin_model->get_all_partners();
+    public function add_partner_to_training($training_id){
+        $data['training'] = $this->Admin_model->get_training_by_id($training_id);
+        $partners_list = $this->Admin_model->get_all_partners();
+        $selected_partners_list = $this->Admin_model->get_partners_of_training($training_id);
+
+        $data["selected_partners_list"] = array();
+        foreach ($selected_partners_list as $selected_partner){
+            array_push($data["selected_partners_list"], $selected_partner["p_id"] );
+        }
+
+        $data["partners"] = array();
+        foreach ($partners_list as $partner){
+            $data["partners"][$partner["p_id"]] = $partner["p_name"];
+        }
         $this->load->view('admin/trainings/partners/partners_add/home', $data);
 
     }
 
-    public function add_partner_to_training_validate(){
-        $data = $this->input->post('partnerID');  // get post id to delete user
+    public function add_partner_to_training_validate($training_id){
+        $data = $this->input->post('partnerSelect');
 
         foreach($data as $partner){
             echo $partner;
         }
+
+        //echo $data;
     }
 
 

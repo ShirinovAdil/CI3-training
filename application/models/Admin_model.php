@@ -60,11 +60,12 @@ class Admin_model extends CI_Model
 
 
 
-    function get_all_partners()
+    public function get_all_partners()
     {
-        $query = $this->db->query('SELECT * FROM partners');
+        $query = $this->db->query('SELECT p_id, p_name FROM partners');
         return $query->result_array();
     }
+
 
 
 }
