@@ -2,7 +2,7 @@
 /** @var $is_authenticated */
 ?>
 
-<div class="hold-transition sidebar-mini layout-fixed">
+<div class="hold-transition sidebar-mini layout-fixed" style="margin-bottom: 25px;">
     <!-- Site wrapper -->
     <div class="wrapper">
         <!-- Navbar -->

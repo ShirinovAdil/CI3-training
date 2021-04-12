@@ -18,10 +18,11 @@ class   Admin extends CI_Controller
         redirect(base_url('admin/login'));
     }
 
-    public function login(){
+    public function login()
+    {
         if (!$this->is_authenticated()) {
             $this->load->view('admin/login');
-        }else{
+        } else {
             redirect(base_url('admin/dashboard'));
         }
     }
@@ -135,7 +136,7 @@ class   Admin extends CI_Controller
             } else {
                 echo "forbidden action";
             }
-        }else{
+        } else {
             $this->load->view('errors/permission/home');
         }
     }
@@ -150,13 +151,12 @@ class   Admin extends CI_Controller
         $data = array();
         $data['user'] = $user;
         $data['all_roles'] = $this->User_model->role_enums('tb_users', 'role');
+        $data['header_data'] = $header_data;
 
         $this->form_validation->set_rules('username', 'Username', 'required');
-        if($this->form_validation->run() == false){
-            $this->load->view('layout/head');
-            $this->load->view('layout/header', $header_data);
-            $this->load->view('admin/edit_user', $data);
-        }else{
+        if ($this->form_validation->run() == false) {
+            $this->load->view('admin/users/edit/home', $data);
+        } else {
             $form_array = array();
             $form_array['username'] = $this->input->post('username');
             $this->User_model->update_user_by_id($user_id, $form_array);
@@ -164,7 +164,8 @@ class   Admin extends CI_Controller
         }
     }
 
-    public function access_denied(){
+    public function access_denied()
+    {
         $this->load->view('layout/head');
         $this->load->view('errors/permission/home');
     }
@@ -185,7 +186,7 @@ class   Admin extends CI_Controller
     public function sessions()
     {
         // :Service - Echo session vars
-       echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+        echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
     }
 
 
@@ -195,13 +196,16 @@ class   Admin extends CI_Controller
         $this->load->view('admin/trainings/home', $data);
     }
 
-    public function trainings_partners_list($training_id){
+
+    public function trainings_partners_list($training_id)
+    {
         $data['partners'] = $this->Admin_model->get_partners_of_training($training_id);
         $data['training'] = $this->Admin_model->get_training_by_id($training_id);
         $this->load->view('admin/trainings/partners/home', $data);
     }
 
-    public function delete_partner_by_id_from_training(){
+    public function delete_partner_by_id_from_training()
+    {
         $partner_id = $this->input->post('partnerId');
         $training_id = $this->input->post('trainingId');
         $query = $this->Admin_model->delete_partner_by_id_from_training($partner_id);
@@ -213,34 +217,50 @@ class   Admin extends CI_Controller
 
     }
 
-    public function add_partner_to_training($training_id){
+    public function add_partner_to_training($training_id)
+    {
         $data['training'] = $this->Admin_model->get_training_by_id($training_id);
-        $partners_list = $this->Admin_model->get_all_partners();
+        $partners_list = $this->Admin_model->get_all_partners_for_dropdown();
         $selected_partners_list = $this->Admin_model->get_partners_of_training($training_id);
 
         $data["selected_partners_list"] = array();
-        foreach ($selected_partners_list as $selected_partner){
-            array_push($data["selected_partners_list"], $selected_partner["p_id"] );
+        foreach ($selected_partners_list as $selected_partner) {
+            array_push($data["selected_partners_list"], $selected_partner["p_id"]);
         }
 
         $data["partners"] = array();
-        foreach ($partners_list as $partner){
+        foreach ($partners_list as $partner) {
             $data["partners"][$partner["p_id"]] = $partner["p_name"];
         }
         $this->load->view('admin/trainings/partners/partners_add/home', $data);
 
     }
 
-    public function add_partner_to_training_validate($training_id){
+    public function add_partner_to_training_validate($training_id)
+    {
         $data = $this->input->post('partnerSelect');
-
-        foreach($data as $partner){
+        foreach ($data as $partner) {
             echo $partner;
         }
-
-        //echo $data;
     }
 
+    /************ PARTNERS ************/
+    public function partners()
+    {
+        $data['partners'] = $this->Admin_model->get_all_partners();
+        $this->load->view('admin/partners/home', $data);
+    }
+
+    public function delete_partner()
+    {
+        $partner_id = $this->input->post('partnerId');  // get post id to delete user
+        $query = $this->Admin_model->delete_partner_by_id($partner_id);
+        if ($query) {
+            redirect(base_url('admin/partners'));
+        } else {
+            echo "forbidden action";
+        }
+    }
 
 
 }

@@ -40,55 +40,43 @@
                     <div class="card-header">
                         <h3 class="card-title">List of trainings</h3>
 
-                        <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right"
-                                       placeholder="Search">
 
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0" style="height: 300px;">
+                            <table class="table table-head-fixed text-nowrap">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title AZ</th>
+                                    <th>Description AZ</th>
+                                    <th>Contact</th>
+                                    <th>Partners</th>
+                                </tr>
+                                </thead>
+
+
+                                <?php foreach ($trainings as $training): ?>
+
+                                    <tr>
+                                        <td> <?php echo $training['t_id']; ?></td>
+                                        <td> <?php echo $training['t_title_az']; ?></td>
+                                        <td> <?php echo $training['t_description_az']; ?></td>
+                                        <td> <?php echo $training['t_contact']; ?></td>
+                                        <td>
+                                            <a href="<?= base_url('admin/trainings_partners_list/' . $training['t_id']) ?>"><?php echo $training['partners_count']; ?></a>
+                                        </td>
+                                    </tr>
+
+                                <?php endforeach; ?>
+                            </table>
                         </div>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 300px;">
-                        <table class="table table-head-fixed text-nowrap">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Title AZ</th>
-                                <th>Description AZ</th>
-                                <th>Contact</th>
-                                <th>Partners</th>
-                            </tr>
-                            </thead>
-
-
-                            <?php foreach ($trainings as $training): ?>
-
-                                <tr>
-                                    <td> <?php echo $training['t_id']; ?></td>
-                                    <td> <?php echo $training['t_title_az']; ?></td>
-                                    <td> <?php echo $training['t_description_az']; ?></td>
-                                    <td> <?php echo $training['t_contact']; ?></td>
-                                    <td>
-                                        <a href="<?= base_url('admin/trainings_partners_list/' . $training['t_id']) ?>"><?php echo $training['partners_count']; ?></a>
-                                    </td>
-                                </tr>
-
-                            <?php endforeach; ?>
-                        </table>
-                    </div>
                 </div>
-
             </div>
         </div>
     </div>
 </section>
 
-<pre><?php print_r($trainings) ?></pre>
+<!--<pre>--><?php //print_r($trainings) ?><!--</pre>-->
 
 

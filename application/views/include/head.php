@@ -27,4 +27,13 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>/assets/plugins/summernote/summernote-bs4.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <style>
+        .wrapper{
+            background-color: #f4f6f9;
+        }
+        .card-title{
+            padding: 0 15px 15px 0;
+        }
+    </style>
 </head>

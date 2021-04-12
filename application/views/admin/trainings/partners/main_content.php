@@ -8,7 +8,7 @@
 
 <!-- Main content -->
 <section>
-    <div class="container-fluid dashboard-content" style="padding-top: 25px;">
+    <div class="container-fluid dashboard-content">
         <div class="row">
             <div class="col-12">
 
