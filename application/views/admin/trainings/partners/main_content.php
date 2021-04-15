@@ -103,7 +103,7 @@
                         </table>
                     </div>
                 </div>
-                <a style="float:right" href="<?= base_url('admin/add_partner_to_training/'.$training['t_id'])?>" type="button" class="btn btn-primary">Add partner</a>
+                <a style="float:right" href="<?= base_url('admin/add_partner_to_training/'.$training['t_id'])?>" type="button" class="btn btn-primary">Add a partner to training</a>
 
             </div>
         </div>

@@ -11,7 +11,9 @@ class   Admin extends CI_Controller
         parent::__construct();
         $this->load->model("User_model"); // load model
         $this->load->model("Admin_model"); // load model
+        $this->load->library('upload');
     }
+
 
     public function index($message = NULL)
     {
@@ -119,6 +121,7 @@ class   Admin extends CI_Controller
         }
     }
 
+    /************ USER **************/
     public function delete_user($ALLOWED_ROLES = array("root", "admin", "moderator"))
     {
         // path("admin/delete_user")
@@ -163,6 +166,11 @@ class   Admin extends CI_Controller
             redirect(base_url('admin/dashboard'));
         }
     }
+    /************ USER END **************/
+
+
+
+    /************ ERRORS ***********/
 
     public function access_denied()
     {
@@ -170,7 +178,10 @@ class   Admin extends CI_Controller
         $this->load->view('errors/permission/home');
     }
 
+    /************ END ERRORS ***********/
 
+
+    /*************** EXTRAS ****************/
     public function all()
     {
         // :Service - Return last 10 users
@@ -189,9 +200,15 @@ class   Admin extends CI_Controller
         echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
     }
 
+    /*************** END EXTRAS ****************/
+
+
+    /***************  TRAININGS ****************/
 
     public function trainings()
     {
+        /** List all trainings **/
+
         $data['trainings'] = $this->Admin_model->get_all_trainings();
         $this->load->view('admin/trainings/home', $data);
     }
@@ -199,6 +216,8 @@ class   Admin extends CI_Controller
 
     public function trainings_partners_list($training_id)
     {
+        /** List partners of specific training **/
+
         $data['partners'] = $this->Admin_model->get_partners_of_training($training_id);
         $data['training'] = $this->Admin_model->get_training_by_id($training_id);
         $this->load->view('admin/trainings/partners/home', $data);
@@ -206,9 +225,13 @@ class   Admin extends CI_Controller
 
     public function delete_partner_by_id_from_training()
     {
+        /** Delete a partner from training by p_id **/
+        /** p_id comes from form hidden input on post request **/
+
+
         $partner_id = $this->input->post('partnerId');
         $training_id = $this->input->post('trainingId');
-        $query = $this->Admin_model->delete_partner_by_id_from_training($partner_id);
+        $query = $this->Admin_model->delete_partner_by_id_from_training($partner_id, $training_id);
         if ($query) {
             redirect(base_url('admin/trainings_partners_list/' . $training_id));
         } else {
@@ -239,20 +262,23 @@ class   Admin extends CI_Controller
     public function add_partner_to_training_validate($training_id)
     {
         $data = $this->input->post('partnerSelect');
-        foreach ($data as $partner) {
-            echo $partner;
-        }
+        $this->Admin_model->add_partners_to_training($training_id, $data);
+        redirect(base_url('admin/trainings'));
     }
 
     /************ PARTNERS ************/
     public function partners()
     {
+        /** List all partners **/
+
         $data['partners'] = $this->Admin_model->get_all_partners();
         $this->load->view('admin/partners/home', $data);
     }
 
     public function delete_partner()
     {
+        /** Delete a partner **/
+
         $partner_id = $this->input->post('partnerId');  // get post id to delete user
         $query = $this->Admin_model->delete_partner_by_id($partner_id);
         if ($query) {
@@ -261,6 +287,72 @@ class   Admin extends CI_Controller
             echo "forbidden action";
         }
     }
+
+    public function edit_partner($partner_id)
+    {
+        $header_data = array(
+            "is_authenticated" => $this->is_authenticated()
+        );
+        // VALIDATION ?
+        $partner = $this->Admin_model->get_partner_by_id($partner_id);
+        $data = array();
+        $data['partner'] = $partner;
+        $data['header_data'] = $header_data;
+
+        $this->form_validation->set_rules('partnerName', 'Partner Name', 'required');
+        //$this->form_validation->set_rules('partnerWebsite', 'Partner Website', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('admin/partners/edit/home', $data);
+        } else {
+            $form_array = array();
+            $form_array['p_name'] = $this->input->post('partnerName');
+            $form_array['p_website'] = $this->input->post('partnerWebsite');
+            $this->Admin_model->update_partner_by_id($partner_id, $form_array);
+            redirect(base_url('admin/partners'));
+        }
+    }
+
+    public function add_partner(){
+        $this->load->view('admin/partners/add/home');
+    }
+
+    public function add_partner_validate(){
+        $config['upload_path']          = './uploads/partners';
+        $config['allowed_types']        = 'gif|jpg|png';
+        $config['max_size']             = 100;
+        $config['max_width']            = 1024;
+        $config['max_height']           = 768;
+
+        $this->upload->initialize($config);
+
+        if ( ! $this->upload->do_upload('userfile'))
+        {
+            $error = array('error' => $this->upload->display_errors());
+            var_dump($error);
+        }
+        else
+        {
+            $data = array('upload_data' => $this->upload->data());
+
+            $partner_name = $this->input->post('partnerName');
+            $partner_website = $this->input->post('partnerWebsite');
+            $partner_image = $data['upload_data']['file_path'].$data['upload_data']['file_name'];
+            $partner_image = str_replace('C:/xampp/htdocs/CI3-training', '.', $partner_image);
+
+            $partner_data = array(
+                'p_name' => $partner_name,
+                'p_website' => $partner_website,
+                'p_image' => $partner_image,
+            );
+            $this->Admin_model->add_partner($partner_data);
+            redirect(base_url('admin/partners'));
+        }
+
+    }
+
+    /************ END PARTNERS ************/
+
 
 
 }

@@ -25,6 +25,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Website</th>
+                                    <th>Image</th>
                                     <th>Status</th>
                                     <th>Actions</th>
 
@@ -38,6 +39,7 @@
                                         <td> <?php echo $partner['p_id']; ?></td>
                                         <td> <?php echo $partner['p_name']; ?></td>
                                         <td> <?php echo $partner['p_website']; ?></td>
+                                        <td><img style="width: 50px; height: 50px;" src="<?php echo base_url() . $partner['p_image']; ?>" alt="company image"></td>
                                         <td> <?php echo $partner['p_status']; ?></td>
 
                                         <td>
@@ -46,7 +48,7 @@
                                                    value="<?= set_value('partnerId', $partner['p_id']); ?>">
 
 
-                                            <a href="<?php echo base_url('admin/edit_user/');
+                                            <a href="<?php echo base_url('admin/edit_partner/');
                                             echo '' . $partner['p_id']; ?>">
                                                 <button type="button" class="btn btn-warning mr-1"><i
                                                             class="fas fa-edit"></i></button>
@@ -67,6 +69,7 @@
 
                     </div>
                 </div>
+                <a style="float:right" href="<?= base_url('admin/add_partner')?>" type="button" class="btn btn-primary">Add a partner</a>
 
 
             </div>
