@@ -326,10 +326,13 @@ class   Admin extends CI_Controller
 
         $this->upload->initialize($config);
 
-        if ( ! $this->upload->do_upload('userfile'))
-        {
+        $this->form_validation->set_rules('partnerName', 'Partner Name', 'required');
+        //$this->form_validation->set_rules('partnerWebsite', 'Partner Website', 'required');
+
+
+        if ($this->form_validation->run() == false || !$this->upload->do_upload('userfile')) {
             $error = array('error' => $this->upload->display_errors());
-            var_dump($error);
+            $this->load->view('admin/partners/add/home', $error);
         }
         else
         {

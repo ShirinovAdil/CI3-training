@@ -12,7 +12,6 @@
     </div>
     <!-- /.card-header -->
 
-
     <!-- form start -->
     <?= form_open_multipart(base_url() . 'admin/add_partner_validate', ['method' => 'post', 'class' => 'form-horizontal']) ?>
 
@@ -20,7 +19,7 @@
         <div class="form-group row">
             <label for="inputPartnerName" class="col-sm-2 col-form-label">Partner Name</label>
             <div class="col-sm-10">
-                <input type="text" name="partnerName" class="form-control" id="inputPartnerName"
+                <input type="text" name="partnerName" class="form-control" id="inputPartnerName" value="<?= set_value('partnerName', ''); ?>"
                        placeholder="Partner name / Company name">
             </div>
         </div>
@@ -28,7 +27,7 @@
         <div class="form-group row">
             <label for="inputPartnerWebsite" class="col-sm-2 col-form-label">Partner's Website</label>
             <div class="col-sm-10">
-                <input type="text" name="partnerWebsite" id="inputPartnerWebsite" class="form-control"
+                <input type="text" name="partnerWebsite" id="inputPartnerWebsite" class="form-control"  value="<?= set_value('partnerWebsite', ''); ?>"
                        placeholder="Partner website / Company website">
             </div>
         </div>
@@ -40,6 +39,13 @@
             </div>
         </div>
 
+        <?php echo '<small style="color:#fc4103">' . validation_errors() . '</small>';  ?>
+
+        <?php
+        if (isset($error)) {
+            echo '<small style="color:#fc4103">' . $error . '</small>';
+        }
+        ?>
     </div>
 
 

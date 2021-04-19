@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <?php $this->load->view('admin/trainings/partners/partners_add/head'); ?>
-    <?php $this->load->view('admin/trainings/partners/partners_add/style'); ?>
-
-</head>
-
+<?php $this->load->view('admin/trainings/partners/partners_add/head'); ?>
 <body class="hold-transition skin-blue sidebar-mini">
 
 <div class="wrapper">
@@ -21,4 +13,3 @@
 </div>
 <?php $this->load->view('admin/trainings/partners/partners_add/script'); ?>
 </body>
-</html>

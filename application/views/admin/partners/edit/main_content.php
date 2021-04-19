@@ -17,7 +17,7 @@
         <div class="form-group row">
             <label for="inputPartnerName" class="col-sm-2 col-form-label">Partner Name</label>
             <div class="col-sm-10">
-                <input type="text" name="partnerName" value="<?= set_value('username', $partner['p_name']); ?>"
+                <input type="text" name="partnerName" value="<?= set_value('partnerName', $partner['p_name']); ?>"
                        class="form-control" id="inputPartnerName" placeholder="Partner name / Company name">
             </div>
         </div>
@@ -26,7 +26,7 @@
             <label for="inputPartnerWebsite" class="col-sm-2 col-form-label">Partner's Website</label>
             <div class="col-sm-10">
                 <input type="text" name="partnerWebsite" id="inputPartnerWebsite"
-                       value="<?= set_value('role', $partner['p_website']); ?>" class="form-control" placeholder="Partner website / Company website">
+                       value="<?= set_value('partnerWebsite', $partner['p_website']); ?>" class="form-control" placeholder="Partner website / Company website">
             </div>
         </div>
     </div>
