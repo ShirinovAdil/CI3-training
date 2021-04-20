@@ -354,6 +354,16 @@ class   Admin extends CI_Controller
 
     }
 
+    public function edit_partner_status($partner_id){
+        $this->Admin_model->change_partner_status($partner_id);
+        redirect(base_url('admin/partners'));
+    }
+
+    public function edit_training_partner_status($training_id, $partner_id){
+        $this->Admin_model->change_training_partner_status($training_id, $partner_id);
+        redirect(base_url('admin/trainings_partners_list/' . $training_id));
+    }
+
     /************ END PARTNERS ************/
 
 

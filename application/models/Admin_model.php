@@ -33,8 +33,8 @@ class Admin_model extends CI_Model
     {
         // get partners of a specific training
 
-        $sql = "select partners.* from partners 
-                INNER join trainings_partners ON trainings_partners.tp_t_id = $training_id
+        $sql = "select partners.p_id, partners.p_name, partners.p_website, trainings_partners.tp_status  from partners 
+                inner join trainings_partners ON trainings_partners.tp_t_id = $training_id
                 where partners.p_id = trainings_partners.tp_p_id";
         $query = $this->db->query($sql);
 
@@ -162,6 +162,42 @@ class Admin_model extends CI_Model
         return $this->db->insert_id();
     }
 
+
+    public function change_partner_status($partner_id){
+        //Change status of a partner from 1 to 0 and opposite
+
+        $partner = $this->get_partner_by_id($partner_id);
+        if($partner['p_status'] == 0){
+            $partner['p_status'] = 1;
+        }elseif ($partner['p_status'] == 1){
+            $partner['p_status'] = 0;
+        }
+        $this->update_partner_by_id($partner_id, $partner);
+    }
+
+    public function update_traninigs_partner_by_id($training_id, $partner_id, $form_array){
+        $this->db->where('tp_p_id', $partner_id);
+        $this->db->where('tp_t_id', $training_id);
+        $this->db->update('trainings_partners', $form_array);
+    }
+
+    public function change_training_partner_status($training_id, $partner_id){
+        // Change status of training's partner from 1 to 0 and opposite
+
+        $sql = "select * from trainings_partners 
+                where trainings_partners.tp_p_id = $partner_id and trainings_partners.tp_t_id = $training_id";
+        $query = $this->db->query($sql);
+
+        $training_partner =  $query->row_array();
+
+        if($training_partner['tp_status'] == 0){
+            $training_partner['tp_status'] = 1;
+        }elseif ($training_partner['tp_status'] == 1){
+            $training_partner['tp_status'] = 0;
+        }
+        $this->update_traninigs_partner_by_id($training_id, $partner_id, $training_partner);
+
+    }
 
 }
 
