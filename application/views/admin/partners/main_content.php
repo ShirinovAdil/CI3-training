@@ -45,7 +45,7 @@
                                         <td> <?php echo $partner['p_status']; ?></td>
 
                                         <td>
-                                            <?= form_open(base_url('admin/delete_partner'), ['method' => 'post', 'display' => 'inline-block', 'width' => '44px;']) ?>
+                                            <?= form_open(base_url('admin/delete_partner'), ['method' => 'post', 'display' => 'inline-block', 'width' => '44px;',"onsubmit" => "return(update());"]) ?>
                                             <input type="hidden" name="partnerId"
                                                    value="<?= set_value('partnerId', $partner['p_id']); ?>">
 
@@ -56,36 +56,9 @@
                                                             class="fas fa-edit"></i></button>
                                             </a>
 
-
-
-                                            <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-danger mr-1" data-toggle="modal" data-target="#deletePartnerModal"><i
-                                                        class="far fa-trash-alt"></i>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="far fa-trash-alt"></i>
                                             </button>
-
-
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="deletePartnerModal" tabindex="-1" role="dialog" aria-labelledby="deletePartnerModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="deletePartnerModalLabel">Confirmation</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Are you sure you want to delete this partner?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-danger">
-                                                                Delete
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
 
 

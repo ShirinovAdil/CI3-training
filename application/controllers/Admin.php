@@ -22,7 +22,7 @@ class   Admin extends CI_Controller
 
     public function login()
     {
-        if (!$this->is_authenticated()) {
+            if (!$this->is_authenticated()) {
             $this->load->view('admin/login');
         } else {
             redirect(base_url('admin/dashboard'));
@@ -71,7 +71,8 @@ class   Admin extends CI_Controller
             if ($user) {
                 $session_data = array(
                     'userId' => $user->id,
-                    'userRole' => $user->role
+                    'userRole' => $user->role,
+                    'username' => $user->username
                 );
                 $this->session->set_userdata($session_data);
                 redirect(base_url() . 'admin/dashboard');
@@ -221,6 +222,20 @@ class   Admin extends CI_Controller
         $data['partners'] = $this->Admin_model->get_partners_of_training($training_id);
         $data['training'] = $this->Admin_model->get_training_by_id($training_id);
         $this->load->view('admin/trainings/partners/home', $data);
+    }
+
+    public function delete_training()
+    {
+        /** Delete a training **/
+
+        $t_id = $this->input->post('t_id');
+        $query = $this->Admin_model->delete_training_by_id($t_id);
+        if($query){
+            redirect(base_url('admin/trainings'));
+        }else{
+            echo "forbidden";
+        }
+
     }
 
     public function delete_partner_by_id_from_training()

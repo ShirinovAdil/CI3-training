@@ -199,6 +199,21 @@ class Admin_model extends CI_Model
 
     }
 
+    public function delete_training_by_id($training_id)
+    {
+        // delete training by id
+        if(is_numeric($training_id)){
+            $sql = "delete from trainings where t_id = $training_id";
+            $query = $this->db->query($sql);
+            if($query){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+
 }
 
 

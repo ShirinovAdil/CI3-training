@@ -77,42 +77,16 @@
                                     <td> <?php echo $partner['tp_status']; ?></td>
 
                                     <td>
-                                        <?= form_open(base_url('admin/delete_partner_by_id_from_training'), ['method' => 'post', 'display' => 'inline-block', 'width' => '44px;']) ?>
+                                        <?= form_open(base_url('admin/delete_partner_by_id_from_training'), ['method' => 'post', 'display' => 'inline-block', 'width' => '44px;', "onsubmit" => "return(update());"]) ?>
                                         <input type="hidden" name="partnerId"
                                                value="<?= set_value('partnerId', $partner['p_id']); ?>">
 
                                         <input type="hidden" name="trainingId"
                                                value="<?= set_value('trainingId', $training['t_id']); ?>">
 
-
-
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-danger mr-1" data-toggle="modal" data-target="#deleteTrainingPartnerModal"><i
-                                                    class="far fa-trash-alt"></i>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="far fa-trash-alt"></i>
                                         </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="deleteTrainingPartnerModal" tabindex="-1" role="dialog" aria-labelledby="deleteTrainingPartnerModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteTrainingPartnerModalLabel">Confirmation</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure you want to delete this partner?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-danger">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
 
                                         <a href="<?php echo base_url('admin/edit_training_partner_status/');

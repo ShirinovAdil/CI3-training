@@ -14,5 +14,6 @@
 
 </div>
 <?php $this->load->view('include/script'); ?>
+<?php $this->load->view('include/confirm_modal'); ?>
 </body>
 </html>
