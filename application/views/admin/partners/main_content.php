@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-header">
 
-                            <h3 class="card-title">List of partners</h3>
+                        <h3 class="card-title">List of partners</h3>
 
                         <!-- /.card-header -->
 
@@ -39,7 +39,9 @@
                                         <td> <?php echo $partner['p_id']; ?></td>
                                         <td> <?php echo $partner['p_name']; ?></td>
                                         <td> <?php echo $partner['p_website']; ?></td>
-                                        <td><img style="width: 50px; height: 50px;" src="<?php echo base_url() . $partner['p_image']; ?>" alt="company image"></td>
+                                        <td><img style="width: 50px; height: 50px;"
+                                                 src="<?php echo base_url() . $partner['p_image']; ?>"
+                                                 alt="company image"></td>
                                         <td> <?php echo $partner['p_status']; ?></td>
 
                                         <td>
@@ -60,6 +62,7 @@
                                             <button type="button" class="btn btn-danger mr-1" data-toggle="modal" data-target="#deletePartnerModal"><i
                                                         class="far fa-trash-alt"></i>
                                             </button>
+
 
                                             <!-- Modal -->
                                             <div class="modal fade" id="deletePartnerModal" tabindex="-1" role="dialog" aria-labelledby="deletePartnerModalLabel" aria-hidden="true">
@@ -86,6 +89,20 @@
 
 
 
+                                            <a href="<?php echo base_url('admin/edit_partner_status/');
+                                            echo '' . $partner['p_id']; ?>">
+                                                <?php if ($partner['p_status'] == 0){ ?>
+                                                <button type="button" class="btn btn-danger mr-1">
+                                                    Off
+                                                </button>
+                                            </a>
+                                        <?php } else { ?>
+                                            <button type="button" class="btn btn-success mr-1">
+                                                On
+                                            </button>
+                                        <?php } ?>
+
+
                                             <?= form_close() ?>
                                         </td>
 
@@ -98,7 +115,8 @@
 
                     </div>
                 </div>
-                <a style="float:right" href="<?= base_url('admin/add_partner')?>" type="button" class="btn btn-primary">Add a partner</a>
+                <a style="float:right" href="<?= base_url('admin/add_partner') ?>" type="button"
+                   class="btn btn-primary">Add a partner</a>
 
 
             </div>

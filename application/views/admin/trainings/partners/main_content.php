@@ -62,6 +62,7 @@
                                 <th>Partner ID</th>
                                 <th>Partner name</th>
                                 <th>Partner website</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -73,6 +74,7 @@
                                     <td> <?php echo $partner['p_id']; ?></td>
                                     <td> <?php echo $partner['p_name']; ?></td>
                                     <td> <?php echo $partner['p_website']; ?></td>
+                                    <td> <?php echo $partner['tp_status']; ?></td>
 
                                     <td>
                                         <?= form_open(base_url('admin/delete_partner_by_id_from_training'), ['method' => 'post', 'display' => 'inline-block', 'width' => '44px;']) ?>
@@ -113,10 +115,18 @@
                                         </div>
 
 
-                                        <div class="custom-control custom-switch" style="display: inline;">
-                                            <input type="checkbox" class="custom-control-input" id=<?="customSwitch" .$partner['p_id']?>>
-                                            <label class="custom-control-label" for=<?="customSwitch" .$partner['p_id']?>>Status</label>
-                                        </div>
+                                        <a href="<?php echo base_url('admin/edit_training_partner_status/');
+                                        echo '' . $training['t_id'] . '/' .  $partner['p_id']; ?>">
+                                            <?php if ($partner['tp_status'] == 0){ ?>
+                                            <button type="button" class="btn btn-danger mr-1">
+                                                Off
+                                            </button>
+                                        </a>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-success mr-1">
+                                            On
+                                        </button>
+                                    <?php } ?>
 
 
                                         <?= form_close() ?>
