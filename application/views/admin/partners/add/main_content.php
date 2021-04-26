@@ -7,7 +7,7 @@
 
 <!-- Horizontal Form -->
 <div class="card card-info col-md-6 offset-md-3 mt-5">
-    <div class="card-header">
+    <div class="card-header mt-2">
         <h3 class="card-title">Add a new Partner</h3>
     </div>
     <!-- /.card-header -->

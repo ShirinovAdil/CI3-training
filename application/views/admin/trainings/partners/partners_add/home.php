@@ -1,4 +1,5 @@
 <?php $this->load->view('admin/trainings/partners/partners_add/head'); ?>
+
 <body class="hold-transition skin-blue sidebar-mini">
 
 <div class="wrapper">
