@@ -5,9 +5,7 @@
 
 <div class="wrapper">
 
-    <div class="content-wrapper">
-        <?php $this->load->view('error/permission/main_content'); ?>
-    </div>
+    <?php $this->load->view('errors/permission/main_content'); ?>
     <?php $this->load->view('include/footer'); ?>
 
 </div>

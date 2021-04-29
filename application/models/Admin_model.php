@@ -2,8 +2,6 @@
 
 class Admin_model extends CI_Model
 {
-
-
     function get_all_trainings()
     {
         // Return all trainings with their partners
@@ -212,6 +210,23 @@ class Admin_model extends CI_Model
             }
         }
         return false;
+    }
+
+    public function update_training_by_id($training_id, $form_array){
+        $this->db->where('t_id', $training_id);
+        $this->db->update('trainings', $form_array);
+    }
+
+    public function change_training_status($training_id){
+        //Change status of a partner from 1 to 0 and opposite
+
+        $training = $this->get_training_by_id($training_id);
+        if($training['t_status'] == 0){
+            $training['t_status'] = 1;
+        }elseif ($training['t_status'] == 1){
+            $training['t_status'] = 0;
+        }
+        $this->update_training_by_id($training_id, $training);
     }
 
 }

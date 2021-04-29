@@ -87,43 +87,7 @@
                                             </button>
 
 
-
-
-
-
-<!--                                            <button type="button" class="btn btn-danger mr-1" data-toggle="modal"-->
-<!--                                                    data-target="#deleteTrainingModal"><i-->
-<!--                                                        class="far fa-trash-alt"></i>-->
-<!--                                            </button>-->
-<!---->
-<!---->
-<!--                                            <div class="modal fade" id="deleteTrainingModal" tabindex="-1" role="dialog"-->
-<!--                                                 aria-labelledby="deleteTrainingModalLabel" aria-hidden="true">-->
-<!--                                                <div class="modal-dialog" role="document">-->
-<!--                                                    <div class="modal-content">-->
-<!--                                                        <div class="modal-header">-->
-<!--                                                            <h5 class="modal-title" id="deleteTrainingModalLabel">-->
-<!--                                                                Confirmation</h5>-->
-<!--                                                            <button type="button" class="close" data-dismiss="modal"-->
-<!--                                                                    aria-label="Close">-->
-<!--                                                                <span aria-hidden="true">&times;</span>-->
-<!--                                                            </button>-->
-<!--                                                        </div>-->
-<!--                                                        <div class="modal-body">-->
-<!--                                                            Are you sure you want to delete this partner?-->
-<!--                                                            --><?php //var_dump($training['t_id'])?>
-<!--                                                        </div>-->
-<!--                                                        <div class="modal-footer">-->
-<!--                                                            <button type="button" class="btn btn-secondary"-->
-<!--                                                                    data-dismiss="modal">Close-->
-<!--                                                            </button>-->
-<!--                                                            -->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-
-                                            <a href="<?php echo base_url('admin/edit_training/');
+                                            <a href="<?php echo base_url('admin/edit_training_status/');
                                             echo '' . $training['t_id']; ?>">
                                                 <?php if ($training['t_status'] == 0){ ?>
                                                 <button type="button" class="btn btn-danger mr-1">
