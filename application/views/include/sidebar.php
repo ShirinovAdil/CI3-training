@@ -55,6 +55,15 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="<?= base_url('admin/speakers') ?>" class="nav-link">
+                        <i class="nav-icon fas fa-tree"></i>
+                        <p>
+                            Speakers
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tree"></i>
                         <p>

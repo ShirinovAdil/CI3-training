@@ -1,12 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class   Admin extends CI_Controller
+class Admin extends CI_Controller
 {
 
     private $ROLES = array("root", "moderator", "admin", "user");
+    public $header_data = array();
 
-    public function __construct()
+    function __construct()
     {
         parent::__construct();
         $this->load->model("User_model"); // load model
@@ -22,6 +23,9 @@ class   Admin extends CI_Controller
 
     public function login()
     {
+        $this->is_authenticated();
+
+
         if ($this->login_required()) {
             $this->load->view('admin/login');
         } else {
@@ -52,6 +56,7 @@ class   Admin extends CI_Controller
         $userRole = $this->session->userdata('userRole');
         $username = $this->session->userdata('username');
         if ($userId && $userRole && $username) {
+            $this->header_data['is_authenticated'] = true;
             return true;
         } else {
             $this->session->sess_destroy();
@@ -138,13 +143,8 @@ class   Admin extends CI_Controller
         // path("admin/dashboard")
         /* Render admin dashboard  */
 
-
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES);
-
-        $header_data = array(
-            "is_authenticated" => true
-        );
 
         $users = $this->User_model->get_all_users();
         $data = array(
@@ -184,18 +184,13 @@ class   Admin extends CI_Controller
     {
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES);
-
-        $header_data = array(
-            "is_authenticated" => true
-        );
-
         $this->isNumeric($user_id);
 
         $user = $this->User_model->get_user_by_id($user_id);
         $data = array();
         $data['user'] = $user;
         $data['all_roles'] = $this->User_model->role_enums('tb_users', 'role');
-        $data['header_data'] = $header_data;
+        $data['header_data'] = $this->header_data;
 
         $this->form_validation->set_rules('username', 'Username', 'required');
         if ($this->form_validation->run() == false) {
@@ -261,7 +256,6 @@ class   Admin extends CI_Controller
         $this->load->view('admin/trainings/home', $data);
     }
 
-
     public function trainings_partners_list($training_id)
     {
         /** List partners of specific training **/
@@ -314,7 +308,6 @@ class   Admin extends CI_Controller
         } else {
             echo "forbidden action";
         }
-
     }
 
     public function add_partner_to_training($training_id)
@@ -347,10 +340,9 @@ class   Admin extends CI_Controller
         $this->check_role($ALLOWED_ROLES = array("root"));
         $this->isNumeric($training_id);
 
-
         $data = $this->input->post('partnerSelect');
         $this->Admin_model->add_partners_to_training($training_id, $data);
-        redirect(base_url('admin/trainings'));
+        redirect(base_url('admin/trainings_partners_list/' . $training_id));
     }
 
     public function edit_training_status($training_id)
@@ -360,7 +352,6 @@ class   Admin extends CI_Controller
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES = array("root"));
         $this->isNumeric($training_id);
-
 
         $this->Admin_model->change_training_status($training_id);
         redirect(base_url('admin/trainings'));
@@ -372,7 +363,7 @@ class   Admin extends CI_Controller
     /************ PARTNERS ************/
     public function partners()
     {
-        /** List all partners **/
+        /** List all speakers **/
 
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES = array("root"));
@@ -383,7 +374,7 @@ class   Admin extends CI_Controller
 
     public function delete_partner()
     {
-        /** Delete a partner **/
+        /** Delete a speaker **/
 
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES = array("root"));
@@ -406,13 +397,10 @@ class   Admin extends CI_Controller
         $this->check_role($ALLOWED_ROLES = array("root"));
         $this->isNumeric($partner_id);
 
-        $header_data = array(
-            "is_authenticated" => true
-        );
         $partner = $this->Admin_model->get_partner_by_id($partner_id);
         $data = array();
         $data['partner'] = $partner;
-        $data['header_data'] = $header_data;
+        $data['header_data'] = $this->header_data;
 
         $this->form_validation->set_rules('partnerName', 'Partner Name', 'required');
         //$this->form_validation->set_rules('partnerWebsite', 'Partner Website', 'required');
@@ -486,7 +474,6 @@ class   Admin extends CI_Controller
         $this->check_role($ALLOWED_ROLES = array("root"));
         $this->isNumeric($partner_id);
 
-
         $this->Admin_model->change_partner_status($partner_id);
         redirect(base_url('admin/partners'));
     }
@@ -500,12 +487,192 @@ class   Admin extends CI_Controller
         $this->isNumeric($training_id);
         $this->isNumeric($partner_id);
 
-
         $this->Admin_model->change_training_partner_status($training_id, $partner_id);
         redirect(base_url('admin/trainings_partners_list/' . $training_id));
     }
 
     /************ END PARTNERS ************/
+
+
+
+
+    /**************** SPEAKERS ******************/
+
+    public function speakers()
+    {
+        /** List all speaker **/
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+
+        $data['speakers'] = $this->Admin_model->get_all_speakers();
+        $this->load->view('admin/speakers/home', $data);
+    }
+
+    public function delete_speaker()
+    {
+        /** Delete a speaker **/
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+
+        $speaker_id = $this->input->post('speakerId');  // get post id to delete speaker
+        $this->isNumeric($speaker_id);
+
+        $query = $this->Admin_model->delete_speaker_by_id($speaker_id);
+
+        if ($query) {
+            redirect(base_url('admin/speakers'));
+        } else {
+            echo "forbidden action";
+        }
+    }
+
+    public function edit_speaker($speaker_id)
+    {
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->isNumeric($speaker_id);
+
+        $speaker = $this->Admin_model->get_speaker_by_id($speaker_id);
+        $data = array();
+        $data['speaker'] = $speaker;
+        $data['header_data'] = $this->header_data;
+
+        $this->form_validation->set_rules('speakerName', 'Speaker Name', 'required');
+        $this->form_validation->set_rules('speakerCompany', 'Speaker Company', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('admin/speakers/edit/home', $data);
+        } else {
+            $form_array = array();
+            $form_array['s_name'] = $this->input->post('speakerName');
+            $form_array['s_company'] = $this->input->post('speakerCompany');
+            $this->Admin_model->update_speaker_by_id($speaker_id, $form_array);
+            redirect(base_url('admin/speakers'));
+        }
+    }
+
+    public function add_speaker()
+    {
+        // Add a new partner
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->load->view('admin/speakers/add/home');
+    }
+
+    public function add_speaker_validate()
+    {
+        // Service: Validate partner addition
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+
+        $config['upload_path'] = './uploads/speakers';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = 1024;
+        $config['max_width'] = 3840;
+        $config['max_height'] = 2160;
+
+        $this->upload->initialize($config);
+
+        $this->form_validation->set_rules('speakerName', 'Speaker Name', 'required');
+        $this->form_validation->set_rules('speakerCompany', 'Speaker Company', 'required');
+
+
+        if ($this->form_validation->run() == false || !$this->upload->do_upload('userfile')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->load->view('admin/speakers/add/home', $error);
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+
+            $speaker_name = $this->input->post('speakerName');
+            $speaker_company = $this->input->post('speakerCompany');
+            $speaker_image = $data['upload_data']['file_path'] . $data['upload_data']['file_name'];
+            $speaker_image = str_replace('C:/xampp/htdocs/CI3-training', '.', $speaker_image);
+
+            $speaker_data = array(
+                's_name' => $speaker_name,
+                's_company' => $speaker_company,
+                's_image' => $speaker_image,
+            );
+            $this->Admin_model->add_speaker($speaker_data);
+            redirect(base_url('admin/speakers'));
+        }
+
+    }
+
+    public function trainings_speakers_list($training_id)
+    {
+        /** List speakers of specific training **/
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root", "admin, moderator"));
+        $this->isNumeric($training_id);
+
+        $data['speakers'] = $this->Admin_model->get_speakers_of_training($training_id);
+        $data['training'] = $this->Admin_model->get_training_by_id($training_id);
+        $this->load->view('admin/trainings/speakers/home', $data);
+    }
+
+
+    public function add_speaker_to_training($training_id)
+    {
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+
+        $data['training'] = $this->Admin_model->get_training_by_id($training_id);
+        $this->isNumeric($training_id);
+
+        $speakers_list = $this->Admin_model->get_all_speakers_for_dropdown();
+        $selected_speakers_list = $this->Admin_model->get_speakers_of_training($training_id);
+
+        $data["selected_speakers_list"] = array();
+        foreach ($selected_speakers_list as $selected_speaker) {
+            array_push($data["selected_speakers_list"], $selected_speaker["s_id"]);
+        }
+
+        $data["speakers"] = array();
+        foreach ($speakers_list as $speaker) {
+            $data["speakers"][$speaker["s_id"]] = $speaker["s_name"];
+        }
+        $this->load->view('admin/trainings/speakers/speakers_add/home', $data);
+
+    }
+
+    public function add_speaker_to_training_validate($training_id)
+    {
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->isNumeric($training_id);
+
+        $data = $this->input->post('speakerSelect');
+        $this->Admin_model->add_speakers_to_training($training_id, $data);
+        redirect(base_url('admin/speakers'));
+    }
+
+    public function delete_speaker_by_id_from_training()
+    {
+        /** Delete a speaker from training by s_id **/
+        /** p_id comes from form hidden input on post request **/
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+
+        $speaker_id = $this->input->post('speakerId');
+        $training_id = $this->input->post('trainingId');
+        $this->isNumeric($speaker_id);
+        $this->isNumeric($training_id);
+
+        $query = $this->Admin_model->delete_speaker_by_id_from_training($speaker_id, $training_id);
+        if ($query) {
+            redirect(base_url('admin/trainings_speakers_list/' . $training_id));
+        } else {
+            echo "forbidden action";
+        }
+
+    }
 
 
 }
