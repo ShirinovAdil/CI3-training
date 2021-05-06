@@ -6,13 +6,14 @@ class Admin_model extends CI_Model
     {
         // Return all trainings with their partners
 
-        $this->db->select('trainings.*, COUNT(trainings_partners.tp_t_id) as partners_count, COUNT(trainings_speakers.ts_t_id) as speakers_count');
-        $this->db->from('trainings');
-        $this->db->join('trainings_partners', 'trainings.t_id = trainings_partners.tp_t_id', 'left');
-        $this->db->join('partners', 'trainings_partners.tp_p_id  = partners.p_id', 'left');
-        $this->db->join('trainings_speakers', 'trainings.t_id = trainings_speakers.ts_t_id', 'left');
-        $this->db->join('speakers', 'trainings_speakers.ts_s_id  = speakers.s_id', 'left');
-        $this->db->group_by('trainings.t_id');
+        $this->db->select(
+            'trainings.*,
+            (SELECT COUNT(trainings_partners.tp_t_id) FROM trainings_partners) as partners_count,
+            (SELECT COUNT(trainings_speakers.ts_t_id) from trainings_speakers) as speakers_count');
+            $this->db->from('trainings');
+            $this->db->group_by('trainings.t_id');
+
+        
 
         $query = $this->db->get();
 

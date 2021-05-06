@@ -23,8 +23,6 @@ class Admin extends CI_Controller
 
     public function login()
     {
-        $this->is_authenticated();
-
 
         if ($this->login_required()) {
             $this->load->view('admin/login');
