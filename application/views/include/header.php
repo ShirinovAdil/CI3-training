@@ -14,10 +14,10 @@
                                 class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href=<?=base_url('admin/dashboard')?> class="nav-link">Home</a>
+                    <a  href="<?=base_url('admin/dashboard')?>" class="nav-link" >Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    <a href="https://ereforms.org/" target='_blank' rel="noopener noreferrer" class="nav-link">Contact</a>
                 </li>
             </ul>
 

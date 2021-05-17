@@ -115,6 +115,8 @@
                         </div>
                     </div>
                 </div>
+                <a style="float:right" href="<?= base_url('admin/add_training') ?>" type="button"
+                   class="btn btn-primary float-left">Create a new training</a>
             </div>
         </div>
     </div>

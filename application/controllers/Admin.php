@@ -31,6 +31,11 @@ class Admin extends CI_Controller
         }
     }
 
+    private function hash_password($password){
+        // :Service - Hash the password
+        return password_hash($password, PASSWORD_BCRYPT);
+    }
+
     public function check_role($role_list)
     {
         // :Service - Check if user has needed role
@@ -108,10 +113,6 @@ class Admin extends CI_Controller
                 $this->session->set_userdata($session_data);
                 redirect(base_url() . 'admin/dashboard');
             } else {
-                //$this->session->set_flashdata('success', 'Success Message...');
-                //$this->session->set_flashdata('warning', 'Warning Message...');
-                //$this->session->set_flashdata('info', 'Info Message...');
-                $this->session->set_flashdata('error', 'Wrong credentials were provided');
                 redirect(base_url('admin/login'));
             }
         } else {
@@ -353,6 +354,86 @@ class Admin extends CI_Controller
 
         $this->Admin_model->change_training_status($training_id);
         redirect(base_url('admin/trainings'));
+    }
+
+    public function add_training(){
+        // Create a new training
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $partners_list = $this->Admin_model->get_all_partners_for_dropdown();
+        $speakers_list = $this->Admin_model->get_all_speakers_for_dropdown();
+        $data["partners"] = array();
+        foreach ($partners_list as $partner) {
+            $data["partners"][$partner["p_id"]] = $partner["p_name"];
+        }        $data['all_speakers_list'] = array();
+
+        $data["speakers"] = array();
+        foreach ($speakers_list as $speaker) {
+            $data["speakers"][$speaker["s_id"]] = $speaker["s_name"];
+        }
+
+            $this->load->view('admin/trainings/add/home', $data);
+    }
+
+    public function add_training_validate()
+    {
+        // Service: Validate training creation
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+
+        $config['upload_path'] = './uploads/speakers';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = 1024;
+        $config['max_width'] = 3840;
+        $config['max_height'] = 2160;
+
+        $this->upload->initialize($config);
+
+        $this->form_validation->set_rules('trainingTitleAz', 'Training Title in Azerbaijani', 'required');
+        $this->form_validation->set_rules('trainingTitleEn', 'Training Title in English', 'required');
+        $this->form_validation->set_rules('trainingDescriptionAz', 'Training Description in Azerbaijani', 'required');
+        $this->form_validation->set_rules('trainingDescriptionEn', 'Training Description in English', 'required');
+        $this->form_validation->set_rules('trainingContact', 'Training Contact information', 'required');
+
+
+        if ($this->form_validation->run() == false || !$this->upload->do_upload('userfile')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->load->view('admin/trainings/add/home', $error);
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+
+            $training_title_az = $this->input->post('trainingTitleAz');
+            $training_title_en = $this->input->post('trainingTitleEn');
+            $training_desc_az = $this->input->post('trainingDescriptionAz');
+            $training_desc_en = $this->input->post('trainingDescriptionEn');
+            $training_contact = $this->input->post('trainingContact');
+            $training_image = $data['upload_data']['file_path'] . $data['upload_data']['file_name'];
+            $training_image = str_replace('C:/xampp/htdocs/CI3-training', '.', $training_image);
+            $training_partners = $this->input->post('partnerSelect');
+            $training_speakers = $this->input->post('partnerSelect');
+            $training_data = array(
+                't_title_az' => $training_title_az,
+                't_title_en' => $training_title_en,
+                't_description_az' => $training_desc_az,
+                't_description_en' => $training_desc_en,
+                't_contact' => $training_contact,
+                't_image' => $training_image,
+                't_created_by' => $this->session->userdata('username')
+            ,
+            );
+            $partner_list = $this->input->post('partnerSelect');
+            $speaker_list = $this->input->post('speakerSelect');
+
+            $training_id = $this->Admin_model->add_training($training_data);
+            $this->Admin_model->add_partners_to_training($training_id, $partner_list);
+            $this->Admin_model->add_speakers_to_training($training_id, $speaker_list);
+
+
+            redirect(base_url('admin/trainings'));
+        }
+
     }
 
     /************ END TRIANINGS ************/

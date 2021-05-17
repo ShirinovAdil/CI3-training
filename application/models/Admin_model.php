@@ -12,9 +12,27 @@ class Admin_model extends CI_Model
             (SELECT COUNT(trainings_speakers.ts_t_id) from trainings_speakers) as speakers_count');
             $this->db->from('trainings');
             $this->db->group_by('trainings.t_id');
+        $query = $this->db->get();
 
-        
+        return $query->result_array();
+    }
 
+    function get_trainings_partners_count(){
+        $this->db->select("SELECT trainings.*,
+                            COUNT(trainings_partners.tp_t_id) as partners_count
+                            LEFT JOIN trainings_partners ON trainings.t_id = trainings_partners.tp_t_id");
+        $this->db->from('trainings');
+        $this->db->group_by('trainings.t_id');
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
+    function get_trainings_speakers_count(){
+        $this->db->select("SELECT trainings.*,
+                            COUNT(trainings_speakers.ts_t_id) as speakers_count
+                             LEFT JOIN trainings_speakers ON trainings.t_id = trainings_speakers.ts_t_id");
+        $this->db->from('trainings');
+        $this->db->group_by('trainings.t_id');
         $query = $this->db->get();
 
         return $query->result_array();
@@ -26,6 +44,23 @@ class Admin_model extends CI_Model
 
         $this->db->where('t_id', $training_id);
         return $this->db->get('trainings')->row_array();
+    }
+
+    public function add_training($training_data)
+    {
+        $data = array(
+            't_title_az' => $training_data['t_title_az'],
+            't_title_en' => $training_data['t_title_en'],
+            't_description_az' => $training_data['t_description_az'],
+            't_description_en' => $training_data['t_description_en'],
+            't_contact' => $training_data['t_contact'],
+            't_image' => $training_data['t_image'],
+            't_created_by' => $training_data['t_created_by']
+        );
+        $this->db->insert('trainings', $data);
+        $insert_id = $this->db->insert_id();
+
+        return $insert_id;
     }
 
     /*************** PARTNERS **************/
@@ -70,7 +105,8 @@ class Admin_model extends CI_Model
         }
     }
 
-    public function delete_all_partners_of_training($training_id){
+    public function delete_all_partners_of_training($training_id)
+    {
 
         // delete all partners of a training
 
@@ -92,10 +128,11 @@ class Admin_model extends CI_Model
         }
     }
 
-    public function add_partners_to_training($training_id, $list_of_partners){
+    public function add_partners_to_training($training_id, $list_of_partners)
+    {
         $this->delete_all_partners_of_training($training_id); // delete all partners and replace with the new ones from dropdown
 
-        foreach ($list_of_partners as $partner){
+        foreach ($list_of_partners as $partner) {
             $this->db->insert('trainings_partners', array('tp_t_id' => $training_id, 'tp_p_id' => $partner));
         }
     }
@@ -134,17 +171,20 @@ class Admin_model extends CI_Model
         }
     }
 
-    public function get_partner_by_id($partner_id){
+    public function get_partner_by_id($partner_id)
+    {
         $this->db->where('p_id', $partner_id);
         return $this->db->get('partners')->row_array();
     }
 
-    public function update_partner_by_id($partner_id, $form_array){
+    public function update_partner_by_id($partner_id, $form_array)
+    {
         $this->db->where('p_id', $partner_id);
         $this->db->update('partners', $form_array);
     }
 
-    public function add_partner($partner_data){
+    public function add_partner($partner_data)
+    {
         $data = array(
             'p_name' => $partner_data['p_name'],
             'p_image' => $partner_data['p_image'],
@@ -153,9 +193,10 @@ class Admin_model extends CI_Model
         $this->db->insert('partners', $data);
     }
 
-    function insert_data($path_name){
+    function insert_data($path_name)
+    {
         $data = array(
-            'p_image'    => $path_name,
+            'p_image' => $path_name,
         );
 
         $this->db->insert('partners', $data);
@@ -164,36 +205,39 @@ class Admin_model extends CI_Model
     }
 
 
-    public function change_partner_status($partner_id){
+    public function change_partner_status($partner_id)
+    {
         //Change status of a partner from 1 to 0 and opposite
 
         $partner = $this->get_partner_by_id($partner_id);
-        if($partner['p_status'] == 0){
+        if ($partner['p_status'] == 0) {
             $partner['p_status'] = 1;
-        }elseif ($partner['p_status'] == 1){
+        } elseif ($partner['p_status'] == 1) {
             $partner['p_status'] = 0;
         }
         $this->update_partner_by_id($partner_id, $partner);
     }
 
-    public function update_traninigs_partner_by_id($training_id, $partner_id, $form_array){
+    public function update_traninigs_partner_by_id($training_id, $partner_id, $form_array)
+    {
         $this->db->where('tp_p_id', $partner_id);
         $this->db->where('tp_t_id', $training_id);
         $this->db->update('trainings_partners', $form_array);
     }
 
-    public function change_training_partner_status($training_id, $partner_id){
+    public function change_training_partner_status($training_id, $partner_id)
+    {
         // Change status of training's partner from 1 to 0 and opposite
 
         $sql = "select * from trainings_partners 
                 where trainings_partners.tp_p_id = $partner_id and trainings_partners.tp_t_id = $training_id";
         $query = $this->db->query($sql);
 
-        $training_partner =  $query->row_array();
+        $training_partner = $query->row_array();
 
-        if($training_partner['tp_status'] == 0){
+        if ($training_partner['tp_status'] == 0) {
             $training_partner['tp_status'] = 1;
-        }elseif ($training_partner['tp_status'] == 1){
+        } elseif ($training_partner['tp_status'] == 1) {
             $training_partner['tp_status'] = 0;
         }
         $this->update_traninigs_partner_by_id($training_id, $partner_id, $training_partner);
@@ -203,35 +247,36 @@ class Admin_model extends CI_Model
     public function delete_training_by_id($training_id)
     {
         // delete training by id
-        if(is_numeric($training_id)){
+        if (is_numeric($training_id)) {
             $sql = "delete from trainings where t_id = $training_id";
             $query = $this->db->query($sql);
-            if($query){
+            if ($query) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
         return false;
     }
 
-    public function update_training_by_id($training_id, $form_array){
+    public function update_training_by_id($training_id, $form_array)
+    {
         $this->db->where('t_id', $training_id);
         $this->db->update('trainings', $form_array);
     }
 
-    public function change_training_status($training_id){
+    public function change_training_status($training_id)
+    {
         //Change status of a partner from 1 to 0 and opposite
 
         $training = $this->get_training_by_id($training_id);
-        if($training['t_status'] == 0){
+        if ($training['t_status'] == 0) {
             $training['t_status'] = 1;
-        }elseif ($training['t_status'] == 1){
+        } elseif ($training['t_status'] == 1) {
             $training['t_status'] = 0;
         }
         $this->update_training_by_id($training_id, $training);
     }
-
 
 
     /************** SPEAKERS ***************/
@@ -252,12 +297,14 @@ class Admin_model extends CI_Model
         return $query->result_array();
     }
 
-    public function get_speaker_by_id($speaker_id){
+    public function get_speaker_by_id($speaker_id)
+    {
         $this->db->where('s_id', $speaker_id);
         return $this->db->get('speakers')->row_array();
     }
 
-    public function update_speaker_by_id($speaker_id, $form_array){
+    public function update_speaker_by_id($speaker_id, $form_array)
+    {
         $this->db->where('s_id', $speaker_id);
         $this->db->update('speakers', $form_array);
     }
@@ -277,7 +324,8 @@ class Admin_model extends CI_Model
         }
     }
 
-    public function add_speaker($speaker_data){
+    public function add_speaker($speaker_data)
+    {
         $data = array(
             's_name' => $speaker_data['s_name'],
             's_image' => $speaker_data['s_image'],
@@ -297,7 +345,8 @@ class Admin_model extends CI_Model
         return $query->result_array();
     }
 
-    public function delete_all_speakers_of_training($training_id){
+    public function delete_all_speakers_of_training($training_id)
+    {
 
         // delete all speakers of a training
 
@@ -319,10 +368,11 @@ class Admin_model extends CI_Model
         }
     }
 
-    public function add_speakers_to_training($training_id, $list_of_speakers){
+    public function add_speakers_to_training($training_id, $list_of_speakers)
+    {
         $this->delete_all_speakers_of_training($training_id); // delete all speakers and replace with the new ones from dropdown
 
-        foreach ($list_of_speakers as $speaker){
+        foreach ($list_of_speakers as $speaker) {
             $this->db->insert('trainings_speakers', array('ts_t_id' => $training_id, 'ts_s_id' => $speaker));
         }
     }

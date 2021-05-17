@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
 <?php $this->load->view('include/head'); ?>
+<style>
+    .speaker-img{
+        transition: transform .2s; /* Animation */
+    }
+    .speaker-img:hover {
+        transform: scale(2.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+
+    }
+</style>
 <body class="hold-transition skin-blue sidebar-mini">
 
 <div class="wrapper">

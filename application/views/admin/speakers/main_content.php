@@ -38,7 +38,7 @@
                                         <td> <?php echo $speaker['s_company']; ?></td>
                                         <td><img style="width: 50px; height: 50px;"
                                                  src="<?php echo base_url() . $speaker['s_image']; ?>"
-                                                 alt="company image"></td>
+                                                 alt="company image" class="speaker-img"></td>
 
                                         <td>
                                             <?= form_open(base_url('admin/delete_speaker'), ['method' => 'post', 'display' => 'inline-block', 'width' => '44px;',"onsubmit" => "return(update());"]) ?>

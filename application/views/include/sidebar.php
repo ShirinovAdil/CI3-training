@@ -38,7 +38,7 @@
 
                 <li class="nav-item">
                     <a href="<?= base_url('admin/trainings') ?>" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-calendar-week"></i>
                         <p>
                             Training
                         </p>
@@ -47,7 +47,7 @@
 
                 <li class="nav-item">
                     <a href="<?= base_url('admin/partners') ?>" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon fas fa-handshake" aria-hidden="true"></i>
                         <p>
                             Partners
                         </p>
@@ -56,7 +56,7 @@
 
                 <li class="nav-item">
                     <a href="<?= base_url('admin/speakers') ?>" class="nav-link">
-                        <i class="nav-icon fas fa-tree"></i>
+                        <i class="nav-icon fas fa-user"></i>
                         <p>
                             Speakers
                         </p>
