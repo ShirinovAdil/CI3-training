@@ -3,7 +3,8 @@
 /** @var $speakers */
 /** @var $all_roles */
 /** @var $error */
-
+/** @var $training_partners */
+/** @var $training_speakers */
 ?>
 
 
@@ -40,8 +41,7 @@
             <label for="trainingDescriptionAz" class="col-sm-2 col-form-label">Training Description AZ</label>
             <div class="col-sm-10">
                 <textarea rows="3" name="trainingDescriptionAz" class="form-control"
-                          id="trainingDescriptionAz" value="<?= set_value('trainingDescriptionAz', ''); ?>"
-                          placeholder="Training description in Azerbaijani"></textarea>
+                          id="trainingDescriptionAz" placeholder="Training description in Azerbaijani"><?= set_value('trainingDescriptionAz', ''); ?></textarea>
             </div>
         </div>
 
@@ -49,8 +49,7 @@
             <label for="trainingDescriptionEn" class="col-sm-2 col-form-label">Training Description EN</label>
             <div class="col-sm-10">
                 <textarea class="form-control" rows="3" name="trainingDescriptionEn"
-                          id="trainingDescriptionAz" value="<?= set_value('trainingDescriptionEn', ''); ?>"
-                          placeholder="Training description in English"></textarea>
+                          id="trainingDescriptionAz" placeholder="Training description in English"><?= set_value('trainingDescriptionEn', ''); ?></textarea>
             </div>
         </div>
 
@@ -72,20 +71,29 @@
 
         <div class="form-group row">
             <label for="partnerSelect[]" class="col-sm-2 col-form-label">Training partners</label>
-            <div class="card-body align-items-center justify-content-center d-flex ">
+            <div class="card-body justify-content-center d-flex">
                 <div class="form-group row d-flex justify-content-between">
 
-                    <?= form_multiselect('partnerSelect[]', $partners) ?>
+                    <?php if (isset($training_partners)){ ?>
+                        <?= form_multiselect('partnerSelect[]', $partners, $training_partners) ?>
+                    <?php }
+                    else {  ?>
+                        <?= form_multiselect('partnerSelect[]', $partners) ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>
 
         <div class="form-group row">
             <label for="speakerSelect[]" class="col-sm-2 col-form-label">Training speakers</label>
-            <div class="card-body align-items-center justify-content-center d-flex ">
+            <div class="card-body justify-content-center d-flex ">
                 <div class="form-group row d-flex justify-content-between">
-
-                    <?= form_multiselect('speakerSelect[]', $speakers) ?>
+                    <?php if (isset($training_speakers)){ ?>
+                        <?= form_multiselect('speakerSelect[]', $speakers, $training_speakers) ?>
+                    <?php }
+                    else {  ?>
+                        <?= form_multiselect('speakerSelect[]', $speakers) ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>

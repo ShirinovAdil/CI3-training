@@ -356,24 +356,33 @@ class Admin extends CI_Controller
         redirect(base_url('admin/trainings'));
     }
 
+    private function  return_partners_and_speakers_for_dropdown(){
+        // Service: returns all partners and speakers for dropdowns
+
+        $partners_list = $this->Admin_model->get_all_partners_for_dropdown();
+        $speakers_list = $this->Admin_model->get_all_speakers_for_dropdown();
+
+        $data["partners"] = array();
+        foreach ($partners_list as $partner) {
+            $data["partners"][$partner["p_id"]] = $partner["p_name"];
+        }
+        $data["speakers"] = array();
+        foreach ($speakers_list as $speaker) {
+            $data["speakers"][$speaker["s_id"]] = $speaker["s_name"];
+        }
+        return $data;
+    }
+
+
     public function add_training(){
         // Create a new training
 
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES = array("root"));
-        $partners_list = $this->Admin_model->get_all_partners_for_dropdown();
-        $speakers_list = $this->Admin_model->get_all_speakers_for_dropdown();
-        $data["partners"] = array();
-        foreach ($partners_list as $partner) {
-            $data["partners"][$partner["p_id"]] = $partner["p_name"];
-        }        $data['all_speakers_list'] = array();
 
-        $data["speakers"] = array();
-        foreach ($speakers_list as $speaker) {
-            $data["speakers"][$speaker["s_id"]] = $speaker["s_name"];
-        }
+        $data = $this->return_partners_and_speakers_for_dropdown();
 
-            $this->load->view('admin/trainings/add/home', $data);
+        $this->load->view('admin/trainings/add/home', $data);
     }
 
     public function add_training_validate()
@@ -399,8 +408,13 @@ class Admin extends CI_Controller
 
 
         if ($this->form_validation->run() == false || !$this->upload->do_upload('userfile')) {
-            $error = array('error' => $this->upload->display_errors());
-            $this->load->view('admin/trainings/add/home', $error);
+            $training_partners = $this->input->post('partnerSelect');
+            $training_speakers = $this->input->post('speakerSelect');
+            $data = $this->return_partners_and_speakers_for_dropdown();
+            $data['error'] = $this->upload->display_errors();
+            $data['training_partners'] = $training_partners;
+            $data['training_speakers'] = $training_speakers;
+            $this->load->view('admin/trainings/add/home', $data);
         } else {
             $data = array('upload_data' => $this->upload->data());
 
@@ -412,7 +426,7 @@ class Admin extends CI_Controller
             $training_image = $data['upload_data']['file_path'] . $data['upload_data']['file_name'];
             $training_image = str_replace('C:/xampp/htdocs/CI3-training', '.', $training_image);
             $training_partners = $this->input->post('partnerSelect');
-            $training_speakers = $this->input->post('partnerSelect');
+            $training_speakers = $this->input->post('speakerSelect');
             $training_data = array(
                 't_title_az' => $training_title_az,
                 't_title_en' => $training_title_en,
@@ -436,7 +450,29 @@ class Admin extends CI_Controller
 
     }
 
+    public function training_details($training_id){
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->isNumeric($training_id);
+
+
+        $training = $this->Admin_model->get_training_by_id($training_id);
+        $partners = $this->Admin_model->get_partners_of_training($training_id);
+        $speakers = $this->Admin_model->get_speakers_of_training($training_id);
+
+        $data = array();
+        $data['training'] = $training;
+        $data['partners'] = $partners;
+        $data['speakers'] = $speakers;
+
+        $this->load->view('admin/trainings/detailed/home', $data);
+    }
+
     /************ END TRIANINGS ************/
+
+
+
+
 
 
     /************ PARTNERS ************/
@@ -493,6 +529,17 @@ class Admin extends CI_Controller
             $this->Admin_model->update_partner_by_id($partner_id, $form_array);
             redirect(base_url('admin/partners'));
         }
+    }
+
+    public function partner_details($partner_id){
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->isNumeric($partner_id);
+
+        $partner = $this->Admin_model->get_partner_by_id($partner_id);
+        $data['partner'] = $partner;
+        $this->load->view('admin/partners/detailed/home', $data);
+
     }
 
     public function add_partner()

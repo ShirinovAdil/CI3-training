@@ -60,18 +60,26 @@
                                 <?php foreach ($trainings as $training){ ?>
 
                                     <tr>
-                                        <td> <?php echo $training['t_id']; ?></td>
+                                        <td><a href="<?= base_url('admin/training_details/') . $training['t_id'] ?>"><?php echo $training['t_id']; ?></a> </td>
                                         <td> <?php echo $training['t_title_az']; ?></td>
                                         <td> <?php echo $training['t_description_az']; ?></td>
                                         <td> <?php echo $training['t_contact']; ?></td>
 
+<!--                                        <td>-->
+<!--                                            <a href="--><?//= base_url('admin/trainings_partners_list/' . $training['t_id']) ?><!--">--><?php //echo $training['partners_count']; ?><!--</a>-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <a href="--><?//= base_url('admin/trainings_speakers_list/' . $training['t_id']) ?><!--">--><?php //echo $training['speakers_count']; ?><!--</a>-->
+<!--                                        </td>-->
+
                                         <td>
-                                            <a href="<?= base_url('admin/trainings_partners_list/' . $training['t_id']) ?>"><?php echo $training['partners_count']; ?></a>
+                                            <a href="<?= base_url('admin/trainings_partners_list/' . $training['t_id']) ?>">View partners</a>
                                         </td>
 
                                         <td>
-                                            <a href="<?= base_url('admin/trainings_speakers_list/' . $training['t_id']) ?>"><?php echo $training['speakers_count']; ?></a>
+                                            <a href="<?= base_url('admin/trainings_speakers_list/' . $training['t_id']) ?>">View speakers</a>
                                         </td>
+
 
                                         <td> <?php echo $training['t_status']; ?></td>
 

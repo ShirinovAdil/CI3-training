@@ -36,7 +36,7 @@
                                 <?php foreach ($partners as $partner): ?>
 
                                     <tr>
-                                        <td> <?php echo $partner['p_id']; ?></td>
+                                        <td><a href="<?=base_url('admin/partner_details/' . $partner['p_id'])?>"><?php echo $partner['p_id']; ?></a></td>
                                         <td> <?php echo $partner['p_name']; ?></td>
                                         <td> <?php echo $partner['p_website']; ?></td>
                                         <td><img style="width: 50px; height: 50px;"
