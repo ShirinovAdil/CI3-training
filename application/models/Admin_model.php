@@ -218,15 +218,23 @@ class Admin_model extends CI_Model
         $this->update_partner_by_id($partner_id, $partner);
     }
 
-    public function update_traninigs_partner_by_id($training_id, $partner_id, $form_array)
+
+
+    public function update_trainings_partner_by_id($training_id, $partner_id, $form_array)
     {
         $this->db->where('tp_p_id', $partner_id);
         $this->db->where('tp_t_id', $training_id);
         $this->db->update('trainings_partners', $form_array);
     }
 
-    public function change_training_partner_status($training_id, $partner_id)
+    public function update_trainings_speaker_by_id($training_id, $speaker_id, $form_array)
     {
+        $this->db->where('ts_s_id', $speaker_id);
+        $this->db->where('ts_t_id', $training_id);
+        $this->db->update('trainings_speakers', $form_array);
+    }
+
+    public function change_training_partner_status($training_id, $partner_id){
         // Change status of training's partner from 1 to 0 and opposite
 
         $sql = "select * from trainings_partners 
@@ -240,7 +248,24 @@ class Admin_model extends CI_Model
         } elseif ($training_partner['tp_status'] == 1) {
             $training_partner['tp_status'] = 0;
         }
-        $this->update_traninigs_partner_by_id($training_id, $partner_id, $training_partner);
+        $this->update_trainings_partner_by_id($training_id, $partner_id, $training_partner);
+    }
+
+    public function change_training_speaker_status($training_id, $speaker_id){
+        // Change status of training's partner from 1 to 0 and opposite
+
+        $sql = "select * from trainings_speakers 
+                where trainings_speakers.ts_s_id = $speaker_id and trainings_speakers.ts_t_id = $training_id";
+        $query = $this->db->query($sql);
+
+        $training_speakers = $query->row_array();
+
+        if ($training_speakers['ts_status'] == 0) {
+            $training_speakers['ts_status'] = 1;
+        } elseif ($training_speakers['ts_status'] == 1) {
+            $training_speakers['ts_status'] = 0;
+        }
+        $this->update_trainings_speaker_by_id($training_id, $speaker_id, $training_speakers);
 
     }
 

@@ -62,7 +62,7 @@
                                     <tr>
                                         <td><a href="<?= base_url('admin/training_details/') . $training['t_id'] ?>"><?php echo $training['t_id']; ?></a> </td>
                                         <td> <?php echo $training['t_title_az']; ?></td>
-                                        <td> <?php echo $training['t_description_az']; ?></td>
+                                        <td> <?php echo substr($training['t_description_az'], 0, 50) . '...'; ?></td>
                                         <td> <?php echo $training['t_contact']; ?></td>
 
 <!--                                        <td>-->

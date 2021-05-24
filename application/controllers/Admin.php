@@ -118,11 +118,10 @@ class Admin extends CI_Controller
         } else {
             redirect(base_url('admin/login'));
         }
-
     }
 
-    function logout()
-    {
+
+    function logout(){
         // path("admin/logout")
         /* Logout an admin user */
 
@@ -137,8 +136,7 @@ class Admin extends CI_Controller
     }
 
 
-    public function dashboard($ALLOWED_ROLES = array("root", "admin", "moderator"))
-    {
+    public function dashboard($ALLOWED_ROLES = array("root", "admin", "moderator")){
         // path("admin/dashboard")
         /* Render admin dashboard  */
 
@@ -150,12 +148,11 @@ class Admin extends CI_Controller
             "users" => $users
         );
         $this->load->view('admin/dashboard/home', $data);
-
     }
 
+
     /************ USER **************/
-    public function delete_user($ALLOWED_ROLES = array("root", "admin"))
-    {
+    public function delete_user($ALLOWED_ROLES = array("root", "admin")){
         // path("admin/delete_user")
         /* Delete user */
 
@@ -168,19 +165,13 @@ class Admin extends CI_Controller
         $query = $this->User_model->delete_user_by_id($user_id);
 
         if ($query) {
-            //$this->session->set_flashdata('success', 'Success Message...');
-            //$this->session->set_flashdata('warning', 'Warning Message...');
-            //$this->session->set_flashdata('error', 'Wrong credentials were provided');
-            $this->session->set_flashdata('info', 'Record was deleted');
             redirect(base_url('admin/dashboard'));
         } else {
-            echo "forbidden action";
+            echo "Forbidden action";
         }
-
     }
 
-    public function edit_user($user_id, $ALLOWED_ROLES = array("root", "admin"))
-    {
+    public function edit_user($user_id, $ALLOWED_ROLES = array("root", "admin")){
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES);
         $this->isNumeric($user_id);
@@ -206,10 +197,10 @@ class Admin extends CI_Controller
 
 
 
+
     /************ ERRORS ***********/
 
-    public function access_denied()
-    {
+    public function access_denied(){
         $this->load->view('errors/permission/home');
     }
 
@@ -219,8 +210,7 @@ class Admin extends CI_Controller
 
 
     /*************** EXTRAS ****************/
-    public function all()
-    {
+    public function all(){
         // :Service - Return last 10 users
 
         $query = $this->User_model->get_last_ten_entries();
@@ -231,8 +221,7 @@ class Admin extends CI_Controller
         }
     }
 
-    public function sessions()
-    {
+    public function sessions(){
         // :Service - Echo session vars
         echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
     }
@@ -242,10 +231,11 @@ class Admin extends CI_Controller
 
 
 
+
+
     /***************  TRAININGS ****************/
 
-    public function trainings()
-    {
+    public function trainings(){
         /** List all trainings **/
 
         $this->is_authenticated();
@@ -255,8 +245,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/trainings/home', $data);
     }
 
-    public function trainings_partners_list($training_id)
-    {
+    public function trainings_partners_list($training_id){
         /** List partners of specific training **/
 
         $this->is_authenticated();
@@ -274,7 +263,7 @@ class Admin extends CI_Controller
         /** Delete a training **/
 
         $this->is_authenticated();
-        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->check_role($ALLOWED_ROLES = array("root")); // allow only root user to delete a training
 
         $t_id = $this->input->post('t_id');
         $this->isNumeric($t_id);
@@ -333,8 +322,7 @@ class Admin extends CI_Controller
 
     }
 
-    public function add_partner_to_training_validate($training_id)
-    {
+    public function add_partner_to_training_validate($training_id){
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES = array("root"));
         $this->isNumeric($training_id);
@@ -344,8 +332,7 @@ class Admin extends CI_Controller
         redirect(base_url('admin/trainings_partners_list/' . $training_id));
     }
 
-    public function edit_training_status($training_id)
-    {
+    public function edit_training_status($training_id){
         // Toggle training partner status 0n -> Off || Off -> On
 
         $this->is_authenticated();
@@ -385,14 +372,13 @@ class Admin extends CI_Controller
         $this->load->view('admin/trainings/add/home', $data);
     }
 
-    public function add_training_validate()
-    {
+    public function add_training_validate(){
         // Service: Validate training creation
 
         $this->is_authenticated();
         $this->check_role($ALLOWED_ROLES = array("root"));
 
-        $config['upload_path'] = './uploads/speakers';
+        $config['upload_path'] = './uploads/trainings';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size'] = 1024;
         $config['max_width'] = 3840;
@@ -561,8 +547,8 @@ class Admin extends CI_Controller
         $config['upload_path'] = './uploads/partners';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size'] = 100;
-        $config['max_width'] = 1024;
-        $config['max_height'] = 768;
+        $config['max_width'] = 1920;
+        $config['max_height'] = 1080;
 
         $this->upload->initialize($config);
 
@@ -798,6 +784,19 @@ class Admin extends CI_Controller
             echo "forbidden action";
         }
 
+    }
+
+    public function edit_training_speaker_status($training_id, $speaker_id)
+    {
+        // Toggle training speaker status 0n -> Off || Off -> On
+
+        $this->is_authenticated();
+        $this->check_role($ALLOWED_ROLES = array("root"));
+        $this->isNumeric($training_id);
+        $this->isNumeric($speaker_id);
+
+        $this->Admin_model->change_training_speaker_status($training_id, $speaker_id);
+        redirect(base_url('admin/trainings_speakers_list/' . $training_id));
     }
 
 
